@@ -129,7 +129,7 @@
         .chat-assist-widget .chat-welcome-title {
             font-size: 22px;
             font-weight: 700;
-            color: var(--chat-color-text), #000000;
+            color: #000000;
             margin-bottom: 24px;
             line-height: 1.3;
         }
@@ -161,7 +161,7 @@
 
         .chat-assist-widget .chat-response-time {
             font-size: 14px;
-            color: var(--chat-color-text-light), #000000;
+            color: #000000;
             margin: 0;
         }
 
@@ -219,7 +219,7 @@
 
         .chat-assist-widget .chat-bubble.bot-bubble {
             background: white;
-            color: var(--chat-color-text), #000000;
+            color: #000000;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
             box-shadow: var(--chat-shadow-sm);
@@ -285,7 +285,7 @@
             border: 1px solid var(--chat-color-light);
             border-radius: var(--chat-radius-md);
             background: var(--chat-color-surface);
-            color: var(--chat-color-text), #000000;
+            color: #000000;
             resize: none;
             font-family: inherit;
             font-size: 14px;
@@ -422,14 +422,14 @@
         }
 
         .chat-assist-widget .chat-link {
-            color: var(--chat-color-primary), #000000;
+            color:  #000000;
             text-decoration: underline;
             word-break: break-all;
             transition: var(--chat-transition);
         }
 
         .chat-assist-widget .chat-link:hover {
-            color: var(--chat-color-secondary), #000000;
+            color:  #000000;
             text-decoration: underline;
         }
 
@@ -452,7 +452,7 @@
         .chat-assist-widget .registration-title {
             font-size: 18px;
             font-weight: 600;
-            color: var(--chat-color-text), #000000;
+            color:  #000000;
             margin-bottom: 16px;
             line-height: 1.3;
         }
@@ -474,7 +474,7 @@
         .chat-assist-widget .form-label {
             font-size: 14px;
             font-weight: 500;
-            color: var(--chat-color-text), #000000;
+            color:  #000000;
         }
 
         .chat-assist-widget .form-input {
