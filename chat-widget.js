@@ -19,8 +19,8 @@
             --chat-color-tertiary: var(--chat-widget-tertiary, #047857);
             --chat-color-light: var(--chat-widget-light, #d1fae5);
             --chat-color-surface: var(--chat-widget-surface, #ffffff);
-            --chat-color-text: var(--chat-widget-text, #1f2937);
-            --chat-color-text-light: var(--chat-widget-text-light, #6b7280);
+            --chat-color-text: var(--chat-widget-text, #000000);
+            --chat-color-text-light: var(--chat-widget-text-light, #000000);
             --chat-color-border: var(--chat-widget-border, #e5e7eb);
             --chat-shadow-sm: 0 1px 3px rgba(16, 185, 129, 0.1);
             --chat-shadow-md: 0 4px 6px rgba(16, 185, 129, 0.15);
@@ -87,7 +87,7 @@
         .chat-assist-widget .chat-header-title {
             font-size: 16px;
             font-weight: 600;
-            color: white;
+            color: #000000;
         }
 
         .chat-assist-widget .chat-close-btn {
@@ -97,7 +97,7 @@
             transform: translateY(-50%);
             background: rgba(255, 255, 255, 0.2);
             border: none;
-            color: white;
+            color: #000000;
             cursor: pointer;
             padding: 4px;
             display: flex;
@@ -142,7 +142,7 @@
             width: 100%;
             padding: 14px 20px;
             background: linear-gradient(135deg, var(--chat-color-primary) 0%, var(--chat-color-secondary) 100%);
-            color: white;
+            color: #000000;
             border: none;
             border-radius: var(--chat-radius-md);
             cursor: pointer;
@@ -211,7 +211,7 @@
 
         .chat-assist-widget .chat-bubble.user-bubble {
             background: linear-gradient(135deg, var(--chat-color-primary) 0%, var(--chat-color-secondary) 100%);
-            color: white;
+            color: #000000;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
             box-shadow: var(--chat-shadow-sm);
@@ -307,7 +307,7 @@
 
         .chat-assist-widget .chat-submit {
             background: linear-gradient(135deg, var(--chat-color-primary) 0%, var(--chat-color-secondary) 100%);
-            color: white;
+            color: #000000;
             border: none;
             border-radius: var(--chat-radius-md);
             width: 48px;
@@ -333,11 +333,11 @@
 
         .chat-assist-widget .chat-launcher {
             position: fixed;
-            bottom: 20px;
+            bottom: 80px;
             height: 56px;
             border-radius: var(--chat-radius-full);
             background: linear-gradient(135deg, var(--chat-color-primary) 0%, var(--chat-color-secondary) 100%);
-            color: white;
+            color: #000000;
             border: none;
             cursor: pointer;
             box-shadow: var(--chat-shadow-md);
@@ -509,7 +509,7 @@
             width: 100%;
             padding: 14px 20px;
             background: linear-gradient(135deg, var(--chat-color-primary) 0%, var(--chat-color-secondary) 100%);
-            color: white;
+            color: #000000;
             border: none;
             border-radius: var(--chat-radius-md);
             cursor: pointer;
