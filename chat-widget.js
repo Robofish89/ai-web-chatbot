@@ -22,9 +22,9 @@
             --chat-color-text: var(--chat-widget-text, #000000);
             --chat-color-text-light: var(--chat-widget-text-light, #000000);
             --chat-color-border: var(--chat-widget-border, #e5e7eb);
-            --chat-shadow-sm: 0 1px 3px rgba(16, 185, 129, 0.1);
-            --chat-shadow-md: 0 4px 6px rgba(16, 185, 129, 0.15);
-            --chat-shadow-lg: 0 10px 15px rgba(16, 185, 129, 0.2);
+            --chat-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.10);
+            --chat-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
+            --chat-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
             --chat-radius-sm: 8px;
             --chat-radius-md: 12px;
             --chat-radius-lg: 20px;
@@ -71,7 +71,7 @@
             align-items: center;
             gap: 12px;
             background: linear-gradient(135deg, var(--chat-color-primary) 0%, var(--chat-color-secondary) 100%);
-            color: #000000;
+            color: #ffffff;
             position: relative;
         }
 
@@ -87,7 +87,7 @@
         .chat-assist-widget .chat-header-title {
             font-size: 16px;
             font-weight: 600;
-            color: #000000;
+            color: #ffffff;
         }
 
         .chat-assist-widget .chat-close-btn {
@@ -97,7 +97,7 @@
             transform: translateY(-50%);
             background: rgba(255, 255, 255, 0.2);
             border: none;
-            color: #000000;
+            color: #ffffff;
             cursor: pointer;
             padding: 4px;
             display: flex;
@@ -129,7 +129,7 @@
         .chat-assist-widget .chat-welcome-title {
             font-size: 22px;
             font-weight: 700;
-            color: #000000;
+            color: #ffffff;
             margin-bottom: 24px;
             line-height: 1.3;
         }
@@ -142,7 +142,7 @@
             width: 100%;
             padding: 14px 20px;
             background: linear-gradient(135deg, var(--chat-color-primary) 0%, var(--chat-color-secondary) 100%);
-            color: #000000;
+            color: #ffffff;
             border: none;
             border-radius: var(--chat-radius-md);
             cursor: pointer;
@@ -161,7 +161,7 @@
 
         .chat-assist-widget .chat-response-time {
             font-size: 14px;
-            color: #000000;
+            color: #ffffff;
             margin: 0;
         }
 
@@ -211,7 +211,7 @@
 
         .chat-assist-widget .chat-bubble.user-bubble {
             background: linear-gradient(135deg, var(--chat-color-primary) 0%, var(--chat-color-secondary) 100%);
-            color: #000000;
+            color: #ffffff;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
             box-shadow: var(--chat-shadow-sm);
@@ -219,7 +219,7 @@
 
         .chat-assist-widget .chat-bubble.bot-bubble {
             background: white;
-            color: #000000;
+            color: #ffffff;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
             box-shadow: var(--chat-shadow-sm);
@@ -285,7 +285,7 @@
             border: 1px solid var(--chat-color-light);
             border-radius: var(--chat-radius-md);
             background: var(--chat-color-surface);
-            color: #000000;
+            color: #ffffff;
             resize: none;
             font-family: inherit;
             font-size: 14px;
@@ -302,12 +302,12 @@
         }
 
         .chat-assist-widget .chat-textarea::placeholder {
-            color: #000000;
+            color: #ffffff;
         }
 
         .chat-assist-widget .chat-submit {
             background: linear-gradient(135deg, var(--chat-color-primary) 0%, var(--chat-color-secondary) 100%);
-            color: #000000;
+            color: #ffffff;
             border: none;
             border-radius: var(--chat-radius-md);
             width: 48px;
@@ -337,7 +337,7 @@
             height: 56px;
             border-radius: var(--chat-radius-full);
             background: linear-gradient(135deg, var(--chat-color-primary) 0%, var(--chat-color-secondary) 100%);
-            color: #000000;
+            color: #ffffff;
             border: none;
             cursor: pointer;
             box-shadow: var(--chat-shadow-md);
@@ -452,7 +452,7 @@
         .chat-assist-widget .registration-title {
             font-size: 18px;
             font-weight: 600;
-            color:  #000000;
+            color:  #ffffff;
             margin-bottom: 16px;
             line-height: 1.3;
         }
@@ -474,7 +474,7 @@
         .chat-assist-widget .form-label {
             font-size: 14px;
             font-weight: 500;
-            color:  #000000;
+            color:  #ffffff;
         }
 
         .chat-assist-widget .form-input {
@@ -509,7 +509,7 @@
             width: 100%;
             padding: 14px 20px;
             background: linear-gradient(135deg, var(--chat-color-primary) 0%, var(--chat-color-secondary) 100%);
-            color: #000000;
+            color: #ffffff;
             border: none;
             border-radius: var(--chat-radius-md);
             cursor: pointer;
