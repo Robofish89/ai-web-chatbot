@@ -19,8 +19,8 @@
             --chat-color-tertiary: var(--chat-widget-tertiary, #047857);
             --chat-color-light: var(--chat-widget-light, #d1fae5);
             --chat-color-surface: var(--chat-widget-surface, #ffffff);
-            --chat-color-text: var(--chat-widget-text, #000000);
-            --chat-color-text-light: var(--chat-widget-text-light, #000000);
+            --chat-color-text: var(--chat-widget-text, #ffffff);
+            --chat-color-text-light: var(--chat-widget-text-light, #ffffff);
             --chat-color-border: var(--chat-widget-border, #e5e7eb);
             --chat-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.10);
             --chat-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
