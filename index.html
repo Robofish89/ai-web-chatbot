@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Widget Smoke Test</title>
+  <style>body{font-family:system-ui, -apple-system, Segoe UI, Roboto; padding:24px}</style>
+</head>
+<body>
+  <h1>Widget Smoke Test</h1>
+  <p>If the launcher appears in the bottom-right, you’re good.</p>
+
+  <script>
+    window.ChatWidgetConfig = {
+      position: 'right',
+      brandName: 'Demo Assistant',
+      logoUrl: 'https://avatars.githubusercontent.com/u/9919?s=200&v=4',
+      launcherText: 'Need help?',
+      theme: { brand: '#111827', bubbleBg: '#111827' },
+      webhook: {
+        start: 'https://n8n.YOURDOMAIN.com/webhook/chat/start',
+        message: 'https://n8n.YOURDOMAIN.com/webhook/chat/message'
+      },
+      prechat: {
+        fields: [
+          { id: 'name',  label: 'Your name', type: 'text',  required: true },
+          { id: 'email', label: 'Email',     type: 'email', required: true }
+        ],
+        leadFlow: [
+          { id:'role', label:'Are you a Buyer or Seller?', type:'choice',
+            options:['Buyer','Seller'], required:true },
+          { id:'intent', when:{ role:'Buyer' }, label:'Buy or Rent?',
+            type:'choice', options:['Buy','Rent'], required:true }
+        ]
+      }
+    };
+  </script>
+
+  <script src="https://robofish89.github.io/ai-web-chatbot/chat-widget-core.v1.0.0.js" async></script>
+</body>
+</html>
