@@ -1,0 +1,44 @@
+/* Global theme for your n8n chat wrapper
+   Include on any site:
+   <link rel="stylesheet" href="https://robofish89.github.io/ai-web-chatbot/brand.css" />
+*/
+
+:root {
+  /* Core brand */
+  --chat--color-primary: #0f172a;      /* buttons, highlights, user bubble */
+  --chat--color-secondary: #a3863b;    /* accent (e.g., gold) */
+  --chat--border-radius: 16px;
+
+  /* Window + toggle */
+  --chat--toggle--size: 64px;
+  --chat--window--width: 420px;
+  --chat--window--height: 600px;
+
+  /* Typography */
+  --chat--message--font-size: 0.95rem;
+  --chat--title--font-size: 1.05rem;
+
+  /* Bubbles */
+  --chat--user-bubble-bg: var(--chat--color-primary);
+  --chat--user-bubble-fg: #ffffff;
+  --chat--bot-bubble-bg: #f5f6f8;
+  --chat--bot-bubble-fg: #0b1220;
+
+  /* Input */
+  --chat--input--bg: #ffffff;
+  --chat--input--fg: #0b1220;
+  --chat--input--placeholder: #6b7280;
+  --chat--input--border: #e5e7eb;
+
+  /* Borders / shadows */
+  --chat--panel-border: #e5e7eb;
+}
+
+/* Make the launcher circular with a soft shadow */
+.n8n-chat-toggle {
+  border-radius: 9999px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+}
+
+/* Optional: tighten header spacing slightly */
+.n8n-chat-header { padding-top: 10px !important; padding-bottom: 10px !important; }
