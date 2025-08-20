@@ -5,17 +5,16 @@
     <title>Val de Vie Chat Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- n8n widget styles (required) -->
+    <!-- REQUIRED styles for the n8n widget -->
     <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
-    <!-- your shared theme -->
+    <!-- Your shared theme -->
     <link rel="stylesheet" href="../../brand.css" />
 
     <style>
       html, body { height: 100%; margin: 0; }
       .hero {
         min-height: 100%;
-        display: grid;
-        place-items: center;
+        display: grid; place-items: center;
         font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
         color: #0b1220;
       }
@@ -23,7 +22,7 @@
       p { margin: 0; opacity: .7; }
     </style>
 
-    <!-- 1) Define config FIRST so the wrapper can auto-init -->
+    <!-- Define config EARLY so it exists when we init -->
     <script>
       window.ClientChatConfig = {
         webhookUrl: "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat",
@@ -39,9 +38,6 @@
         metadata: { client: "val-de-vie", env: "demo" }
       };
     </script>
-
-    <!-- 2) Load the wrapper AFTER the config -->
-    <script type="module" src="../../widget-wrapper.js"></script>
   </head>
 
   <body>
@@ -51,5 +47,14 @@
         <p>Open the chat bubble bottom-right.</p>
       </div>
     </section>
+
+    <!-- Load wrapper AFTER body exists, then initialize on DOM ready -->
+    <script type="module">
+      import { createClientChat } from '../../widget-wrapper.js';
+      window.addEventListener('DOMContentLoaded', () => {
+        console.log('[client-chat] init', window.ClientChatConfig);
+        createClientChat(window.ClientChatConfig);
+      });
+    </script>
   </body>
 </html>
