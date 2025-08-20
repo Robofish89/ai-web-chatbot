@@ -22,17 +22,8 @@
       h1 { font-weight: 600; margin-bottom: 8px; }
       p { margin: 0; opacity: .7; }
     </style>
-  </head>
-  <body>
-    <section class="hero">
-      <div>
-        <h1>Val de Vie Assistant (Demo)</h1>
-        <p>Open the chat bubble bottom-right.</p>
-      </div>
-    </section>
 
-    <!-- wrapper that calls the official @n8n/chat -->
-    <script type="module" src="../../widget-wrapper.js"></script>
+    <!-- 1) Define config FIRST so the wrapper can auto-init -->
     <script>
       window.ClientChatConfig = {
         webhookUrl: "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat",
@@ -44,9 +35,21 @@
           footer: ""
         },
         features: { streaming: true, memory: true, fileUploads: false },
-        headers: { "X-Client-Key": "val-de-vie" },        // optional auth/routing header
-        metadata: { client: "val-de-vie", env: "demo" }   // visible in n8n Chat Trigger input
+        headers: { "X-Client-Key": "val-de-vie" },
+        metadata: { client: "val-de-vie", env: "demo" }
       };
     </script>
+
+    <!-- 2) Load the wrapper AFTER the config -->
+    <script type="module" src="../../widget-wrapper.js"></script>
+  </head>
+
+  <body>
+    <section class="hero">
+      <div>
+        <h1>Val de Vie Assistant (Demo)</h1>
+        <p>Open the chat bubble bottom-right.</p>
+      </div>
+    </section>
   </body>
 </html>
