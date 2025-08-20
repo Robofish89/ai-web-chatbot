@@ -4,24 +4,36 @@
     <meta charset="utf-8" />
     <title>Val de Vie Chat Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Your shared theme -->
+
+    <!-- n8n widget styles (required) -->
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+    <!-- your shared theme -->
     <link rel="stylesheet" href="../../brand.css" />
+
     <style>
       html, body { height: 100%; margin: 0; }
-      .hero { min-height: 100%; display: grid; place-items: center; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-      h1 { font-weight: 600; }
+      .hero {
+        min-height: 100%;
+        display: grid;
+        place-items: center;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        color: #0b1220;
+      }
+      h1 { font-weight: 600; margin-bottom: 8px; }
+      p { margin: 0; opacity: .7; }
     </style>
   </head>
   <body>
     <section class="hero">
-      <h1>Val de Vie Assistant (Demo)</h1>
-      <p>Open the chat bubble bottom-right.</p>
+      <div>
+        <h1>Val de Vie Assistant (Demo)</h1>
+        <p>Open the chat bubble bottom-right.</p>
+      </div>
     </section>
 
-    <!-- Wrapper that loads the official @n8n/chat and applies your defaults -->
+    <!-- wrapper that calls the official @n8n/chat -->
     <script type="module" src="../../widget-wrapper.js"></script>
     <script>
-      // Configure this specific client
       window.ClientChatConfig = {
         webhookUrl: "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat",
         clientKey: "val-de-vie",
@@ -32,8 +44,8 @@
           footer: ""
         },
         features: { streaming: true, memory: true, fileUploads: false },
-        headers: { "X-Client-Key": "val-de-vie" },     // optional auth/routing header
-        metadata: { client: "val-de-vie", env: "demo" } // appears in n8n Chat Trigger input
+        headers: { "X-Client-Key": "val-de-vie" },        // optional auth/routing header
+        metadata: { client: "val-de-vie", env: "demo" }   // visible in n8n Chat Trigger input
       };
     </script>
   </body>
