@@ -5,88 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Val de Vie Assistant (Demo)</title>
 
-    <!-- 1) REQUIRED styles for the official n8n widget -->
+    <!-- REQUIRED: n8n chat widget styles -->
     <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
 
-    <!-- 2) Your global defaults (applies to all clients; you already created this) -->
+    <!-- Global defaults from your repo -->
     <link rel="stylesheet" href="../../brand.css" />
 
-    <!-- 3) CLIENT-SPECIFIC THEME OVERRIDES (edit per client) -->
+    <!-- Client-specific theme (OK to tweak per client) -->
     <style>
-      /* Val de Vie look & feel */
       :root {
-        /* Core brand */
-        --chat--color-primary: #0f172a;     /* user bubble + primary buttons */
-        --chat--color-secondary: #a3863b;   /* accent (gold) */
+        --chat--color-primary: #0f172a;
+        --chat--color-secondary: #a3863b;
         --chat--border-radius: 18px;
-
-        /* Window size (per client) */
         --chat--window--width: 440px;
         --chat--window--height: 640px;
-
-        /* Typography */
         --chat--message--font-size: 0.96rem;
         --chat--title--font-size: 1.15rem;
       }
 
-      /* Header bar */
-      .n8n-chat-header {
-        background: #0f172a !important;
-        color: #fff !important;
-        border-top-left-radius: 18px !important;
-        border-top-right-radius: 18px !important;
-      }
-
-      /* Launcher (bubble) – position & style */
+      .n8n-chat-header { background:#0f172a!important; color:#fff!important; }
       .n8n-chat-toggle {
-        right: 28px !important; /* move to left by setting: left:28px; right:auto; */
-        bottom: 28px !important;
-        width: 66px !important;
-        height: 66px !important;
-        background: #0f172a !important;
-        color: #fff !important;
-        border-radius: 9999px !important;
-        box-shadow: 0 10px 26px rgba(0,0,0,.18);
+        right:28px!important; bottom:28px!important;
+        width:66px!important; height:66px!important;
+        background:#0f172a!important; color:#fff!important;
+        border-radius:9999px!important; box-shadow:0 10px 26px rgba(0,0,0,.18);
       }
+      .n8n-chat-window { right:28px!important; bottom:100px!important; }
+      .n8n-chat-message--user { background:#0f172a!important; color:#fff!important; border-radius:18px!important; }
+      .n8n-chat-message--bot  { background:#f6f7fb!important; color:#0b1220!important; border-radius:18px!important; }
 
-      /* Chat window offset from edges */
-      .n8n-chat-window {
-        right: 28px !important;
-        bottom: 100px !important;
-      }
-
-      /* Bubbles */
-      .n8n-chat-message--user {
-        background: var(--chat--color-primary) !important;
-        color: #fff !important;
-        border-radius: 18px !important;
-      }
-      .n8n-chat-message--bot {
-        background: #f6f7fb !important;
-        color: #0b1220 !important;
-        border-radius: 18px !important;
-      }
-
-      /* Input bar */
-      .n8n-chat-input {
-        background: #fff !important;
-        border: 1px solid #e5e7eb !important;
-        color: #0b1220 !important;
-      }
-
-      /* Page stub */
-      html, body { height: 100%; margin: 0; }
-      .hero {
-        min-height: 100%;
-        display: grid; place-items: center;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-        color: #0b1220;
-      }
-      h1 { font-weight: 600; margin-bottom: 8px; }
-      p { margin: 0; opacity: .7; }
+      /* Simple page stub */
+      html, body { height:100%; margin:0; }
+      .hero { min-height:100%; display:grid; place-items:center; font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; color:#0b1220; }
+      h1 { font-weight:600; margin-bottom:8px; } p { margin:0; opacity:.7; }
     </style>
 
-    <!-- 4) Define this client's config BEFORE we load the wrapper -->
+    <!-- Define config BEFORE loading the wrapper -->
     <script>
       window.ClientChatConfig = {
         webhookUrl: "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat",
@@ -96,11 +50,9 @@
           inputPlaceholder: "Type your question…",
           footer: ""
         },
-        // Per-client feature flags (toggle streaming later without changing the workflow)
+        // Keep non-streaming until you switch to Respond-to-Chat later
         features: { streaming: false, memory: true, fileUploads: false },
-        // Optional: route/authorize per client
         headers: { "X-Client-Key": "val-de-vie" },
-        // Pass-through info the workflow can read (e.g., to enable streaming later)
         metadata: { client: "val-de-vie", env: "demo", streaming: false }
       };
     </script>
@@ -114,7 +66,7 @@
       </div>
     </section>
 
-    <!-- 5) Load your wrapper and initialize -->
+    <!-- Load your wrapper and explicitly initialize -->
     <script type="module">
       import { createClientChat } from '../../widget-wrapper.js';
       window.addEventListener('DOMContentLoaded', () => {
