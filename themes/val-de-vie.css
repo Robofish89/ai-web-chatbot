@@ -1,0 +1,88 @@
+/* ===========================
+   Val de Vie Theme (v1)
+   =========================== */
+
+/* Core brand tokens */
+:root {
+  --chat--color-primary: #0f172a;   /* deep navy: user bubble + buttons */
+  --chat--color-secondary: #a3863b; /* gold accent */
+  --chat--border-radius: 18px;
+
+  --chat--window--width: 440px;
+  --chat--window--height: 640px;
+
+  --chat--message--font-size: 0.96rem;
+  --chat--title--font-size: 1.15rem;
+  --chat--text-color: #0b1220;
+}
+
+/* Header bar */
+.n8n-chat-header {
+  background: var(--chat--color-primary) !important;
+  color: #fff !important;
+  border-top-left-radius: var(--chat--border-radius) !important;
+  border-top-right-radius: var(--chat--border-radius) !important;
+}
+
+/* Launcher bubble */
+.n8n-chat-toggle {
+  right: 28px !important;
+  bottom: 28px !important;
+  width: 66px !important;
+  height: 66px !important;
+  background: var(--chat--color-primary) !important;
+  color: #fff !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .18);
+}
+
+/* Window offset (when open) */
+.n8n-chat-window {
+  right: 28px !important;
+  bottom: 100px !important;
+}
+
+/* Message bubbles */
+.n8n-chat-message--user {
+  background: var(--chat--color-primary) !important;
+  color: #fff !important;
+  border-radius: var(--chat--border-radius) !important;
+  font-size: var(--chat--message--font-size) !important;
+}
+.n8n-chat-message--bot {
+  background: #f6f7fb !important;
+  color: var(--chat--text-color) !important;
+  border-radius: var(--chat--border-radius) !important;
+  font-size: var(--chat--message--font-size) !important;
+}
+
+/* Input bar */
+.n8n-chat-input {
+  background: #fff !important;
+  border: 1px solid #e5e7eb !important;
+  color: var(--chat--text-color) !important;
+  border-radius: 12px !important;
+}
+
+/* Send button (works in recent widget builds) */
+.n8n-chat-send,
+.n8n-chat-input button[type="submit"] {
+  background: var(--chat--color-secondary) !important;
+  color: #fff !important;
+  border-radius: 50% !important;
+  width: 38px !important;
+  height: 38px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Small safety: never let the input hide */
+.n8n-chat-input { display: flex !important; }
+
+/* Optional footer styling */
+.n8n-chat-footer {
+  font-size: 12px !important;
+  color: #9aa3b2 !important;
+  text-align: center !important;
+}
