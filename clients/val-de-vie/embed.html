@@ -11,33 +11,21 @@
     <!-- Global defaults from your repo -->
     <link rel="stylesheet" href="../../brand.css" />
 
-    <!-- Client-specific theme (OK to tweak per client) -->
+    <!-- Client-specific theme (external file) -->
+    <link rel="stylesheet" href="../../themes/val-de-vie.css" />
+
+    <!-- Simple page stub -->
     <style>
-      :root {
-        --chat--color-primary: #0f172a;
-        --chat--color-secondary: #a3863b;
-        --chat--border-radius: 18px;
-        --chat--window--width: 440px;
-        --chat--window--height: 640px;
-        --chat--message--font-size: 0.96rem;
-        --chat--title--font-size: 1.15rem;
-      }
-
-      .n8n-chat-header { background:#0f172a!important; color:#fff!important; }
-      .n8n-chat-toggle {
-        right:28px!important; bottom:28px!important;
-        width:66px!important; height:66px!important;
-        background:#0f172a!important; color:#fff!important;
-        border-radius:9999px!important; box-shadow:0 10px 26px rgba(0,0,0,.18);
-      }
-      .n8n-chat-window { right:28px!important; bottom:100px!important; }
-      .n8n-chat-message--user { background:#0f172a!important; color:#fff!important; border-radius:18px!important; }
-      .n8n-chat-message--bot  { background:#f6f7fb!important; color:#0b1220!important; border-radius:18px!important; }
-
-      /* Simple page stub */
       html, body { height:100%; margin:0; }
-      .hero { min-height:100%; display:grid; place-items:center; font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; color:#0b1220; }
-      h1 { font-weight:600; margin-bottom:8px; } p { margin:0; opacity:.7; }
+      .hero {
+        min-height:100%;
+        display:grid;
+        place-items:center;
+        font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+        color:#0b1220;
+      }
+      h1 { font-weight:600; margin-bottom:8px; }
+      p { margin:0; opacity:.7; }
     </style>
 
     <!-- Define config BEFORE loading the wrapper -->
