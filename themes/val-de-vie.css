@@ -1,10 +1,10 @@
 /* ===========================
-   Val de Vie Theme (v1)
+   Val de Vie Theme (v2)
    =========================== */
 
 /* Core brand tokens */
 :root {
-  --chat--color-primary: #0f172a;   /* deep navy: user bubble + launcher */
+  --chat--color-primary: #000000;   /* black for header + user bubble */
   --chat--color-secondary: #a3863b; /* gold accent */
   --chat--border-radius: 18px;
 
@@ -16,15 +16,33 @@
   --chat--text-color: #0b1220;
 }
 
-/* Header bar (black) */
+/* Header bar */
 .n8n-chat-header {
-  background: #000 !important;                 /* <-- changed to black */
+  background: var(--chat--color-primary) !important;
   color: #fff !important;
   border-top-left-radius: var(--chat--border-radius) !important;
   border-top-right-radius: var(--chat--border-radius) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px !important;
 }
 
-/* Launcher bubble (kept navy; change to #000 if you want it black too) */
+/* Replace heading with logo */
+.n8n-chat-header h2,
+.n8n-chat-header p {
+  display: none !important; /* hide default heading/subtext */
+}
+.n8n-chat-header::before {
+  content: "" !important;
+  display: block !important;
+  width: 160px !important;
+  height: 40px !important;
+  background: url("https://valdevieproperties.co.za/wp-content/uploads/2023/08/VDV-Properties_Updated-Logo-03.png") no-repeat center;
+  background-size: contain !important;
+}
+
+/* Launcher bubble */
 .n8n-chat-toggle {
   right: 28px !important;
   bottom: 28px !important;
@@ -34,6 +52,10 @@
   color: #fff !important;
   border-radius: 9999px !important;
   box-shadow: 0 10px 26px rgba(0, 0, 0, .18);
+  transition: background 0.25s ease;
+}
+.n8n-chat-toggle:hover {
+  background: var(--chat--color-secondary) !important;
 }
 
 /* Window offset (when open) */
@@ -44,7 +66,7 @@
 
 /* Message bubbles */
 .n8n-chat-message--user {
-  background: var(--chat--color-primary) !important; /* navy user bubble */
+  background: var(--chat--color-primary) !important;
   color: #fff !important;
   border-radius: var(--chat--border-radius) !important;
   font-size: var(--chat--message--font-size) !important;
@@ -62,12 +84,13 @@
   border: 1px solid #e5e7eb !important;
   color: var(--chat--text-color) !important;
   border-radius: 12px !important;
+  display: flex !important;
 }
 
-/* Send button (black) */
+/* Send button */
 .n8n-chat-send,
 .n8n-chat-input button[type="submit"] {
-  background: #000 !important;                  /* <-- changed to black */
+  background: var(--chat--color-secondary) !important;
   color: #fff !important;
   border-radius: 50% !important;
   width: 38px !important;
@@ -77,10 +100,7 @@
   justify-content: center;
 }
 
-/* Safety: never let the input hide */
-.n8n-chat-input { display: flex !important; }
-
-/* Optional footer styling */
+/* Footer */
 .n8n-chat-footer {
   font-size: 12px !important;
   color: #9aa3b2 !important;
