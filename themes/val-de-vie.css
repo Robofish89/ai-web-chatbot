@@ -1,88 +1,9 @@
-/* themes/val-de-vie.css — Val de Vie black+gold theme */
+/* themes/val-de-vie.css */
 
-/* Palette */
-:root{
-  --vdev-black: #000000;
-  --vdev-gold:  #a3863b;
-  --vdev-white: #ffffff;
-  --vdev-border:#e5e5e5;
-}
-
-/* Container */
-#n8n-chat{
+/* Keep chat container in place */
+#n8n-chat {
   position: fixed;
   right: 16px;
   bottom: 16px;
   z-index: 2147483600;
-}
-
-/* Header */
-#n8n-chat .header,
-#n8n-chat [data-part="header"]{
-  background: var(--vdev-black) !important;
-  color: var(--vdev-white) !important;
-  border-bottom: 1px solid var(--vdev-black) !important;
-}
-
-/* Replace title text with crest */
-#n8n-chat .header-title,
-#n8n-chat [data-part="header-title"]{
-  font-size: 0 !important;
-  height: 28px !important;
-  background: url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
-             center/contain no-repeat !important;
-}
-
-/* User bubbles → black */
-#n8n-chat .message--user,
-#n8n-chat [data-role="message-user"]{
-  background: var(--vdev-black) !important;
-  color: var(--vdev-white) !important;
-}
-
-/* Send button → gold */
-#n8n-chat .send-button,
-#n8n-chat [data-part="send-button"],
-#n8n-chat button[type="submit"]{
-  background: var(--vdev-gold) !important;
-  color: var(--vdev-white) !important;
-  border: none !important;
-}
-#n8n-chat .send-button:hover{
-  filter: brightness(0.92) !important;
-}
-
-/* Composer stability */
-#n8n-chat .composer,
-#n8n-chat [data-part="composer"]{
-  min-height: 56px !important;
-  display: flex !important;
-  align-items: center !important;
-}
-#n8n-chat .composer textarea{
-  min-height: 40px !important;
-  resize: vertical !important;
-  flex: 1 1 auto !important;
-}
-
-/* === Launcher (FAB / speech bubble) === */
-#n8n-chat .launcher,
-#n8n-chat .fab,
-#n8n-chat [data-part="launcher"],
-#n8n-chat button[aria-label*="Open"]{
-  background: var(--vdev-black) !important;
-  color: var(--vdev-white) !important;
-  border: none !important;
-  border-radius: 50% !important;  /* keep circle */
-  box-shadow: 0 4px 12px rgba(0,0,0,.25) !important;
-  transition: background 0.25s ease !important;
-}
-
-/* Hover → gold */
-#n8n-chat .launcher:hover,
-#n8n-chat .fab:hover,
-#n8n-chat [data-part="launcher"]:hover,
-#n8n-chat button[aria-label*="Open"]:hover{
-  background: var(--vdev-gold) !important;
-  color: var(--vdev-white) !important;
 }
