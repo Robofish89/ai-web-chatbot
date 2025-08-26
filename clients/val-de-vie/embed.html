@@ -5,16 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Val de Vie Assistant (Demo)</title>
 
-  <!-- Required n8n widget styles -->
+  <!-- Required widget CSS -->
   <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
 
   <!-- Global + Client CSS (relative paths for GitHub Pages) -->
   <link rel="stylesheet" href="../../brand.css" />
-  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=10" />
+  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=12" />
 </head>
-
 <body>
-  <!-- Mount point -->
   <div id="chat-root"></div>
 
   <script type="module">
@@ -22,24 +20,32 @@
 
     const ClientChatConfig = {
       webhook: {
-        url: "https://n8n.recoverykings.co/webhook/xxxxxxx/chat",  // <-- put your real webhook
+        url: "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat",
         route: "general",
       },
       branding: {
-        logoUrl: "https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg",
         name: "Val de Vie Properties",
         welcomeText: "Welcome to Val de Vie Properties! How can I help you today?",
         inputPlaceholder: "Type your message here…",
       },
-      ui: {
-        position: "bottom-right",
-        openOnLoad: true,    // open immediately so you can verify styling
-        showHeader: true,
-      },
+      ui: { position: "bottom-right", openOnLoad: true, showHeader: true },
+
+      /* CSS vars written straight to <n8n-chat> by the wrapper (bypass Shadow DOM) */
+      theme: {
+        "--n8n-chat-primary": "#000000",
+        "--n8n-chat-primary-contrast": "#ffffff",
+        "--n8n-chat-accent": "#a3863b",
+        "--n8n-chat-accent-contrast": "#ffffff",
+        "--n8n-chat-bg": "#ffffff",
+        "--n8n-chat-surface": "#f8f8f8",
+        "--n8n-chat-border": "#e5e5e5",
+        "--n8n-chat-text": "#111111",
+        "--n8n-chat-muted": "#5f6368"
+      }
     };
 
     const api = await createClientChat({ target: "#chat-root", config: ClientChatConfig });
-    window.__vdvChat = api; // for quick console testing
+    window.__vdvChat = api; // optional: control from console
   </script>
 </body>
 </html>
