@@ -1,19 +1,17 @@
 // widget-wrapper.js
-// Loads @n8n/chat (ESM bundle) and mounts the chat with your config.
-// IMPORTANT: Do NOT include window.ChatWidgetConfig anywhere. No auto-init.
+// Loads @n8n/chat ESM bundle and mounts it with per-client config.
+// No window.ChatWidgetConfig and no UMD auto-init anywhere.
 
 export async function createClientChat({ target = "#chat-root", config }) {
-  // Load the ES module bundle exactly once (the UMD URL 404'd on your page)
+  // Load ES bundle once
   if (!window.__n8nChatLoaded) {
-    // Try to import the ESM bundle
     const mod = await import("https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js");
-    // Prefer the export; fall back to global if the bundle attaches one
+    // export name can be createChat; keep a safe fallback
     window.__n8nCreateChat = mod?.createChat || (window.N8NChat && window.N8NChat.createChat);
     window.__n8nChatLoaded = true;
   }
-
   if (typeof window.__n8nCreateChat !== "function") {
-    throw new Error("Failed to load @n8n/chat. createChat not found.");
+    throw new Error("Failed to load @n8n/chat (createChat not found).");
   }
 
   const starter = config?.branding?.welcomeText;
@@ -29,7 +27,45 @@ export async function createClientChat({ target = "#chat-root", config }) {
     openOnLoad: !!config?.ui?.openOnLoad,
   });
 
-  // Small API
+  // ★ Immediately theme the host element so styles penetrate Shadow DOM
+  // (most robust way with this widget).
+  const host = document.querySelector(`${target} n8n-chat`);
+  if (host && host.style && config?.theme) {
+    Object.entries(config.theme).forEach(([name, value]) => {
+      host.style.setProperty(name, value);
+    });
+  }
+
+  // Also inject a couple of guaranteed overrides for header/logo
+  const styleId = "vdev-hard-overrides";
+  if (!document.getElementById(styleId)) {
+    const s = document.createElement("style");
+    s.id = styleId;
+    s.textContent = `
+      #chat-root { position: fixed; right: 16px; bottom: 16px; z-index: 2147483600; }
+      #chat-root n8n-chat .header, #chat-root n8n-chat [data-part="header"] {
+        background:#000 !important; color:#fff !important; border-bottom:1px solid #000;
+      }
+      #chat-root n8n-chat .header-title, #chat-root n8n-chat [data-part="header-title"] {
+        font-size:0 !important; height:28px;
+        background:url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg") center/contain no-repeat;
+      }
+      #chat-root n8n-chat .send-button, #chat-root n8n-chat [data-part="send-button"] {
+        background:#a3863b !important; color:#fff !important;
+      }
+      #chat-root n8n-chat .message--user, #chat-root n8n-chat [data-role="message-user"] {
+        background:#000 !important; color:#fff !important;
+      }
+      #chat-root n8n-chat .composer, #chat-root n8n-chat [data-part="composer"] {
+        min-height:56px !important; display:flex; align-items:center;
+      }
+      #chat-root n8n-chat .composer textarea, #chat-root n8n-chat [data-part="composer-textarea"] {
+        min-height:40px !important; flex:1 1 auto; resize:vertical;
+      }
+    `;
+    document.head.appendChild(s);
+  }
+
   return {
     open: () => widget.open(),
     close: () => widget.close(),
