@@ -1,44 +1,33 @@
-// Minimal wrapper that mounts @n8n/chat and applies per-client branding.
-// NOTE: Keeps logic generic so you only swap CSS + config per client.
+// widget-wrapper.js
+// Minimal, reusable wrapper around @n8n/chat
+// Do NOT use window.ChatWidgetConfig or auto-init UMD script anywhere.
 
 export async function createClientChat({ target = "#chat-root", config }) {
-  // Load the widget script once (idempotent)
+  // Load the widget once
   if (!window.__n8nChatLoaded) {
     await import("https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.umd.js");
     window.__n8nChatLoaded = true;
   }
 
-  // Prepare starter system message
-  const starterMessage = config?.branding?.welcomeText || "";
+  const starter = config?.branding?.welcomeText;
 
-  // Create the widget
+  // Create widget
   const widget = window.N8NChat.createChat({
     webhookUrl: config.webhook.url,
     target,
-    // N8N options
-    // You can pass initialMessages if you want the assistant to start the convo
-    initialMessages: starterMessage ? [{ text: starterMessage, role: "assistant" }] : [],
-    // Placeholder for the input
-    placeholder: config?.branding?.inputPlaceholder || "Type your message…",
-    // Position
     position: config?.ui?.position || "bottom-right",
-    // Header
-    header: config?.ui?.showHeader !== false
-      ? {
-          title: config?.branding?.name || "",
-          // We'll visually replace title with a logo via CSS (keeps accessibility text)
-        }
-      : null,
+    placeholder: config?.branding?.inputPlaceholder || "Type your message…",
+    initialMessages: starter ? [{ role: "assistant", text: starter }] : [],
+    header: config?.ui?.showHeader === false ? null : { title: config?.branding?.name || "" },
+    openOnLoad: !!config?.ui?.openOnLoad,
   });
 
-  // Public API for the launcher or programmatic control
+  // Small API for manual control
   const api = {
     open: () => widget.open(),
     close: () => widget.close(),
-    toggle: (forceOpen) => (forceOpen ? widget.open() : widget.toggle()),
+    toggle: () => widget.toggle(),
   };
 
-  // Expose for debugging if needed
-  window.__vdvChat = api;
   return api;
 }
