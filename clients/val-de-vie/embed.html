@@ -5,18 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Val de Vie Assistant (Demo)</title>
 
-  <!-- Widget base CSS -->
+  <!-- n8n widget base CSS -->
   <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
 
-  <!-- Global + Client CSS (relative paths for GitHub Pages) -->
+  <!-- Global + Client CSS -->
   <link rel="stylesheet" href="../../brand.css" />
-  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=31" />
+  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=40" />
 </head>
 <body>
-  <!-- Mount target (UMD will attach here) -->
+  <!-- Mount target -->
   <div id="n8n-chat"></div>
 
-  <!-- 1) Provide config before the loader -->
+  <!-- Config FIRST -->
   <script>
     window.ChatWidgetConfig = {
       target: "#n8n-chat",
@@ -24,7 +24,6 @@
         url: "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat",
         route: "general"
       },
-      // Greet immediately
       initialMessages: [
         { role: "assistant", text: "Welcome to Val de Vie Properties! How can I help you today?" }
       ],
@@ -35,72 +34,79 @@
     };
   </script>
 
-  <!-- 2) Robust loader: try multiple filenames + globals; fallback to ESM if needed -->
+  <!-- Robust loader: try UMDs -> force init; else ESM fallback -->
   <script>
-    (function loadN8N() {
-      const urls = [
-        // jsDelivr
+    (function () {
+      const UMD_URLS = [
+        // Friendly filenames (adblockers usually allow these)
         "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.umd.js",
-        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.umd.js",
-        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.global.js",
-        // unpkg fallbacks
         "https://unpkg.com/@n8n/chat/dist/chat.umd.js",
-        "https://unpkg.com/@n8n/chat/dist/index.umd.js",
-        "https://unpkg.com/@n8n/chat/dist/index.global.js"
+        // Often-blocked filenames (we try anyway)
+        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.global.js",
+        "https://unpkg.com/@n8n/chat/dist/index.global.js",
+        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.umd.js",
+        "https://unpkg.com/@n8n/chat/dist/index.umd.js"
       ];
 
-      const tryInit = () => {
-        const cfg = window.ChatWidgetConfig || {};
-        // Detect the constructor exposed by different builds
-        const factories = [
+      const tryGetFactory = () => {
+        // Cover known globals across builds
+        const candidates = [
           () => window.N8NChat && window.N8NChat.createChat,
-          () => window.createChat,                 // some builds
-          () => window.Chat && window.Chat.create, // rare global name
+          () => window.N8N && window.N8N.Chat && window.N8N.Chat.createChat,
+          () => window.createChat,                    // some UMDs export this
+          () => window.Chat && window.Chat.create,    // rare alt
+          () => window.Chat && window.Chat.createChat
         ];
-        let create = null;
-        for (const f of factories) {
-          try { create = f(); if (typeof create === "function") break; } catch {}
+        for (const f of candidates) {
+          try { const fn = f(); if (typeof fn === "function") return fn; } catch {}
         }
-        if (typeof create === "function") {
-          // If auto-init didn’t happen, do it now
-          const alreadyMounted = document.querySelector("#n8n-chat n8n-chat");
-          if (!alreadyMounted) {
-            create({
-              webhookUrl: cfg.webhook && cfg.webhook.url,
-              target: cfg.target || "#n8n-chat",
-              position: cfg.position || "bottom-right",
-              placeholder: cfg.placeholder || "Type your message…",
-              initialMessages: cfg.initialMessages || [],
-              header: cfg.header || { title: "Val de Vie Properties" },
-              openOnLoad: !!cfg.openOnLoad
-            });
-          }
-          return true;
-        }
-        return false;
+        return null;
       };
 
-      const loadScript = (src) =>
-        new Promise((resolve, reject) => {
-          const s = document.createElement("script");
-          s.src = src;
-          s.async = true;
-          s.onload = resolve;
-          s.onerror = reject;
-          document.body.appendChild(s);
-        });
+      const forceInit = () => {
+        const create = tryGetFactory();
+        const cfg = window.ChatWidgetConfig || {};
+        if (!create) return false;
+
+        // Avoid double mount
+        const already = document.querySelector("#n8n-chat n8n-chat");
+        if (!already) {
+          create({
+            webhookUrl: cfg.webhook && cfg.webhook.url,
+            target: cfg.target || "#n8n-chat",
+            position: cfg.position || "bottom-right",
+            placeholder: cfg.placeholder || "Type your message…",
+            initialMessages: cfg.initialMessages || [],
+            header: cfg.header || { title: "Val de Vie Properties" },
+            openOnLoad: !!cfg.openOnLoad
+          });
+        }
+        return true;
+      };
+
+      const loadScript = (src) => new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = src;
+        s.async = true;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.body.appendChild(s);
+      });
 
       (async () => {
-        for (const u of urls) {
+        // 1) Try UMDs one by one; after each load, try to init
+        for (const url of UMD_URLS) {
           try {
-            await loadScript(u);
-            // give the script a tick to attach globals
-            await new Promise(r => setTimeout(r, 0));
-            if (tryInit()) return;
-          } catch (_) { /* try next */ }
+            await loadScript(url);
+            // give the script a microtask to attach globals
+            await Promise.resolve();
+            if (forceInit()) return;
+          } catch (e) {
+            // continue to next url
+          }
         }
 
-        // ESM fallback (some adblockers only block “index.*.js” names)
+        // 2) ESM fallback: import and init programmatically
         const m = document.createElement("script");
         m.type = "module";
         m.textContent = `
@@ -117,6 +123,8 @@
               header: cfg.header || { title: "Val de Vie Properties" },
               openOnLoad: !!cfg.openOnLoad
             });
+          } else {
+            console.error("Failed to initialize n8n chat: no factory function found.");
           }
         `;
         document.body.appendChild(m);
