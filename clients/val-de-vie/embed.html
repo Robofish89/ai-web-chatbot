@@ -1,113 +1,53 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Val de Vie Assistant (Demo)</title>
-<style>
-  :root{--black:#000;--gold:#a3863b;--white:#fff;--muted:#5f6368;--border:#e5e5e5}
-  *{box-sizing:border-box} body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#fff}
-  #vdev{position:fixed;right:16px;bottom:16px;z-index:2147483600}
-  /* launcher (speech bubble) */
-  #vdev .launcher{width:56px;height:56px;border-radius:50%;background:var(--black);color:var(--white);display:flex;align-items:center;justify-content:center;
-    box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:pointer;border:none;transition:background .2s}
-  #vdev .launcher:hover{background:var(--gold)}
-  #vdev .launcher svg{width:26px;height:26px;fill:currentColor}
-  /* window */
-  #vdev .win{width:min(420px,90vw);height:70vh;max-height:780px;background:#fff;border:1px solid var(--border);border-radius:16px;
-    box-shadow:0 30px 80px rgba(0,0,0,.22);display:none;overflow:hidden}
-  #vdev.open .win{display:flex;flex-direction:column}
-  /* header */
-  #vdev .hdr{background:var(--black);color:var(--white);padding:16px 20px;display:flex;align-items:center;gap:12px}
-  #vdev .crest{width:120px;height:28px;background:url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg") center/contain no-repeat}
-  /* messages */
-  #vdev .msgs{flex:1;background:#f6f7f8;padding:14px 14px 6px 14px;overflow:auto}
-  #vdev .msg{max-width:80%;margin:8px 0;padding:10px 12px;border-radius:14px;line-height:1.35;font-size:14px;white-space:pre-wrap}
-  #vdev .msg.user{margin-left:auto;background:var(--black);color:var(--white);border-top-right-radius:6px}
-  #vdev .msg.bot{margin-right:auto;background:#fff;border:1px solid var(--border);border-top-left-radius:6px}
-  /* composer */
-  #vdev form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:#fff}
-  #vdev textarea{flex:1;min-height:40px;max-height:120px;resize:vertical;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;outline:none}
-  #vdev button.send{width:46px;border:none;border-radius:10px;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
-  #vdev button.send:hover{filter:brightness(.92)}
-  #vdev .hint{color:var(--muted);font-size:12px;margin:6px 12px 0 12px}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Val de Vie Assistant (Demo)</title>
+
+  <!-- Quick visual fixes for bot text + input colors -->
+  <style>
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial}
+    /* Your widget uses white bot text on white bubbles — make it legible */
+    .chat-assist-widget .chat-bubble.bot-bubble{color:#0b1220}
+    /* Composer text / placeholder on white background */
+    .chat-assist-widget .chat-textarea{color:#0b1220}
+    .chat-assist-widget .chat-textarea::placeholder{color:#6b7280}
+  </style>
 </head>
 <body>
-<div id="vdev" class="open">
-  <div class="win">
-    <div class="hdr"><div class="crest" aria-label="Val de Vie"></div></div>
-    <div class="msgs" id="msgs"></div>
-    <form id="composer">
-      <textarea id="input" placeholder="Type your message…"></textarea>
-      <button type="submit" class="send" title="Send">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l20-9L2 3v7l14 2-14 2v7z"/></svg>
-      </button>
-    </form>
-  </div>
-  <button class="launcher" id="launcher" aria-label="Open chat">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2h16a2 2 0 012 2v12a2 2 0 01-2 2H9l-5 4v-4H4a2 2 0 01-2-2V4a2 2 0 012-2z"/></svg>
-  </button>
-</div>
+  <script>
+    // Configure the widget for Val de Vie
+    window.ChatWidgetConfig = {
+      webhook: {
+        url: "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat",
+        route: "general"
+      },
+      branding: {
+        logo: "https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg",
+        name: "Val de Vie Properties",
+        welcomeText: "Welcome to Val de Vie Properties! How can I help you today?",
+        responseTimeText: "Typically replies in minutes",
+        poweredBy: { text: "Powered by n8n", link: "https://n8n.io" }
+      },
+      style: {
+        position: "right",
+        backgroundColor: "#ffffff",
+        fontColor: "#0b1220",
+        /* Brand colors: black primary, gold secondary */
+        primaryColor: "#000000",
+        secondaryColor: "#a3863b"
+      },
+      suggestedQuestions: [
+        "Book a viewing",
+        "Show latest 3-bed listings",
+        "What are transfer costs?",
+        "Contact an agent"
+      ]
+    };
+  </script>
 
-<script>
-  // ——— config ———
-  const WEBHOOK = "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat";
-  const WELCOME = "Welcome to Val de Vie Properties! How can I help you today?";
-
-  // ——— UI helpers ———
-  const root = document.getElementById('vdev');
-  const msgs = document.getElementById('msgs');
-  const form = document.getElementById('composer');
-  const input = document.getElementById('input');
-  const launcher = document.getElementById('launcher');
-
-  launcher.onclick = () => root.classList.toggle('open');
-
-  function addMsg(text, who='bot'){
-    const div = document.createElement('div');
-    div.className = `msg ${who}`;
-    div.textContent = text;
-    msgs.appendChild(div);
-    msgs.scrollTop = msgs.scrollHeight;
-  }
-
-  addMsg(WELCOME, 'bot');
-
-  // ——— talk to your n8n webhook ———
-  async function sendToWebhook(text){
-    // payload shape: simple and generic; adjust in your n8n workflow if needed
-    const payload = { message: text };
-    const res = await fetch(WEBHOOK, {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json' },
-      body: JSON.stringify(payload),
-      mode: 'cors',
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    // Expect JSON with { reply: "..." } or { data: ... }. Try to read any useful text.
-    let data = null;
-    try { data = await res.json(); } catch(e) {}
-    const reply =
-      (data && (data.reply || data.text || data.message || data.output)) ||
-      "Thanks! (Webhook responded without a message payload.)";
-    return reply;
-  }
-
-  form.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const text = input.value.trim();
-    if (!text) return;
-    addMsg(text, 'user');
-    input.value = '';
-    try{
-      const reply = await sendToWebhook(text);
-      addMsg(String(reply), 'bot');
-    }catch(err){
-      addMsg("I couldn't reach the server (CORS or network). Your UI is working though — we just need to allow POST/OPTIONS from robofish89.github.io at the webhook.", 'bot');
-      console.error(err);
-    }
-  });
-</script>
+  <!-- Load YOUR widget (no third-party code) -->
+  <script defer src="../../chat-widget.js?v=vdv-1"></script>
 </body>
 </html>
