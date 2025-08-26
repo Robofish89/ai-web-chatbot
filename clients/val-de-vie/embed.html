@@ -5,19 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Val de Vie Assistant (Demo)</title>
 
-  <!-- Quick visual fixes for bot text + input colors -->
+  <!-- Visual fixes / brand overrides (no changes to chat-widget.js needed) -->
   <style>
     body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial}
-    /* Your widget uses white bot text on white bubbles — make it legible */
+
+    /* Make bot text legible on white bubbles */
     .chat-assist-widget .chat-bubble.bot-bubble{color:#0b1220}
-    /* Composer text / placeholder on white background */
+
+    /* Composer text color */
     .chat-assist-widget .chat-textarea{color:#0b1220}
     .chat-assist-widget .chat-textarea::placeholder{color:#6b7280}
+
+    /* REMOVE gradients -> force solid black */
+    .chat-assist-widget .chat-header{
+      background:#000 !important;
+    }
+    .chat-assist-widget .chat-launcher{
+      background:#000 !important;
+      color:#fff !important;
+    }
+    .chat-assist-widget .chat-launcher:hover{
+      background:#a3863b !important; /* gold on hover */
+    }
+    .chat-assist-widget .chat-submit{
+      background:#000 !important;
+      color:#fff !important;
+    }
+    .chat-assist-widget .chat-submit:hover{
+      background:#a3863b !important; /* gold on hover */
+    }
+
+    /* Optional: darker suggestion chips to pop on light background */
+    .chat-assist-widget .suggestion-chip{
+      border-color:#dbe5cf !important;
+      background:#f7faf5 !important;
+    }
   </style>
 </head>
 <body>
   <script>
-    // Configure the widget for Val de Vie
+    // Val de Vie configuration (this is what client-embed.js would also build)
     window.ChatWidgetConfig = {
       webhook: {
         url: "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat",
@@ -26,7 +53,8 @@
       branding: {
         logo: "https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg",
         name: "Val de Vie Properties",
-        welcomeText: "Welcome to Val de Vie Properties! How can I help you today?",
+        /* This line shows in the welcome screen header area */
+        welcomeText: "Welcome to Val de Vie — How can we help?",
         responseTimeText: "Typically replies in minutes",
         poweredBy: { text: "Powered by n8n", link: "https://n8n.io" }
       },
@@ -34,9 +62,8 @@
         position: "right",
         backgroundColor: "#ffffff",
         fontColor: "#0b1220",
-        /* Brand colors: black primary, gold secondary */
-        primaryColor: "#000000",
-        secondaryColor: "#a3863b"
+        primaryColor: "#000000",   // solid black (no gradient is enforced by CSS above)
+        secondaryColor: "#a3863b"  // gold (used on hover)
       },
       suggestedQuestions: [
         "Book a viewing",
@@ -48,6 +75,6 @@
   </script>
 
   <!-- Load YOUR widget (no third-party code) -->
-  <script defer src="../../chat-widget.js?v=vdv-1"></script>
+  <script defer src="../../chat-widget.js?v=vdv-ui-2"></script>
 </body>
 </html>
