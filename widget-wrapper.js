@@ -1,6 +1,5 @@
 // widget-wrapper.js
-// NOTE: Not used by val-de-vie/embed.html (we’re using UMD there to avoid Shadow DOM).
-// Keep this file for other clients who may want the ESM/web-component route.
+// ESM loader + programmatic init (useful for other clients/pages).
 
 export async function createClientChat({ target = "#chat-root", config }) {
   if (!window.__n8nChatLoaded) {
@@ -11,7 +10,6 @@ export async function createClientChat({ target = "#chat-root", config }) {
   if (typeof window.__n8nCreateChat !== "function") {
     throw new Error("Failed to load @n8n/chat (createChat not found).");
   }
-
   const starter = config?.branding?.welcomeText;
   const widget = window.__n8nCreateChat({
     webhookUrl: config.webhook.url,
@@ -22,10 +20,5 @@ export async function createClientChat({ target = "#chat-root", config }) {
     header: config?.ui?.showHeader === false ? null : { title: config?.branding?.name || "" },
     openOnLoad: !!config?.ui?.openOnLoad,
   });
-
-  return {
-    open: () => widget.open(),
-    close: () => widget.close(),
-    toggle: () => widget.toggle(),
-  };
+  return { open: () => widget.open(), close: () => widget.close(), toggle: () => widget.toggle() };
 }
