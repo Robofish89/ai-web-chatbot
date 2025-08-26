@@ -8,114 +8,102 @@
   <!-- n8n widget base CSS -->
   <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
 
-  <!-- Site CSS (positioning only; brand styles are injected into the widget itself) -->
+  <!-- Your site CSS (just positions the container; theming is injected below) -->
   <link rel="stylesheet" href="../../brand.css" />
-  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=61" />
+  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=70" />
 </head>
 <body>
-  <!-- Where the widget should mount -->
+  <!-- Mount container -->
   <div id="n8n-chat"></div>
 
   <script>
-    // --- Client config (simple, no magic)
-    const VDV_CONFIG = {
-      target: "#n8n-chat",
+    // Your client config
+    const VDV = {
       webhookUrl: "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat",
-      headerTitle: "Val de Vie Properties",
-      placeholder: "Type your message…",
-      initialMessages: [
-        { role: "assistant", text: "Welcome to Val de Vie Properties! How can I help you today?" }
-      ],
-      openOnLoad: true
+      welcome: "Welcome to Val de Vie Properties! How can I help you today?",
+      placeholder: "Type your message…"
     };
 
-    // --- Utility: load a script once, then resolve
+    // Load the web-component script
     function loadScript(src) {
       return new Promise((resolve, reject) => {
         const s = document.createElement("script");
         s.src = src;
         s.async = true;
-        s.onload = () => resolve();
+        s.onload = resolve;
         s.onerror = () => reject(new Error("Failed to load " + src));
         document.body.appendChild(s);
       });
     }
 
-    // --- After mount, push Val de Vie styles into the Shadow DOM
-    function injectValDeVieStyles() {
-      const wc =
-        document.querySelector("#n8n-chat n8n-chat") ||
-        document.querySelector("body > n8n-chat");
-      if (!wc || !wc.shadowRoot) return false;
+    // Wait until the custom element is defined, then create it ourselves
+    async function mountN8NChat() {
+      // Wait for the browser to register the custom element
+      try {
+        await customElements.whenDefined("n8n-chat");
+      } catch (e) {
+        // older browsers — unlikely here, but bail gracefully
+      }
 
-      if (!wc.shadowRoot.getElementById("vdv-shadow-theme")) {
-        const style = document.createElement("style");
-        style.id = "vdv-shadow-theme";
-        style.textContent = `
-          /* Header: black with crest instead of text */
-          .header { background:#000 !important; color:#fff !important; }
-          .header-title {
-            font-size:0 !important; height:28px !important;
-            background:url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
-                     center/contain no-repeat !important;
+      const host = document.getElementById("n8n-chat");
+      if (!host) return;
+
+      // Avoid duplicate mounts
+      if (host.querySelector("n8n-chat")) return;
+
+      // Create the element directly (no globals/factories needed)
+      const el = document.createElement("n8n-chat");
+      el.setAttribute("webhook-url", VDV.webhookUrl);
+      el.setAttribute("position", "bottom-right");
+      el.setAttribute("open", "true"); // open on load
+      el.setAttribute("placeholder", VDV.placeholder);
+
+      // Some builds want initial messages via property, not attribute
+      el.initialMessages = [{ role: "assistant", text: VDV.welcome }];
+
+      host.appendChild(el);
+
+      // Inject Val de Vie styles straight into the Shadow DOM so defaults can't win
+      let tries = 0;
+      const inject = setInterval(() => {
+        tries++;
+        if (el.shadowRoot) {
+          if (!el.shadowRoot.getElementById("vdv-shadow-theme")) {
+            const style = document.createElement("style");
+            style.id = "vdv-shadow-theme";
+            style.textContent = `
+              /* Header: black with crest */
+              .header { background:#000 !important; color:#fff !important; }
+              .header-title {
+                font-size:0 !important; height:28px !important;
+                background:url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
+                         center/contain no-repeat !important;
+              }
+
+              /* User bubbles: black */
+              .message--user { background:#000 !important; color:#fff !important; }
+
+              /* Send button: gold */
+              .send-button { background:#a3863b !important; color:#fff !important; border:none !important; }
+              .send-button:hover { filter:brightness(0.92) !important; }
+
+              /* Launcher (speech bubble): black → gold on hover */
+              .launcher { background:#000 !important; color:#fff !important; }
+              .launcher:hover { background:#a3863b !important; color:#fff !important; }
+            `;
+            el.shadowRoot.appendChild(style);
           }
-
-          /* User bubble: black */
-          .message--user { background:#000 !important; color:#fff !important; }
-
-          /* Send button: gold */
-          .send-button { background:#a3863b !important; color:#fff !important; border:none !important; }
-          .send-button:hover { filter:brightness(0.92) !important; }
-
-          /* Launcher: speech bubble stays, recolor black -> gold on hover */
-          .launcher { background:#000 !important; color:#fff !important; }
-          .launcher:hover { background:#a3863b !important; color:#fff !important; }
-        `;
-        wc.shadowRoot.appendChild(style);
-      }
-      return true;
-    }
-
-    // --- Initialize widget explicitly
-    function initWidget() {
-      const factory =
-        (window.N8NChat && window.N8NChat.createChat) ||
-        window.createChat ||
-        (window.Chat && (window.Chat.createChat || window.Chat.create));
-
-      if (typeof factory !== "function") return false;
-
-      // Avoid double-mount
-      const already = document.querySelector("#n8n-chat n8n-chat, body > n8n-chat");
-      if (!already) {
-        factory({
-          webhookUrl: VDV_CONFIG.webhookUrl,
-          target: VDV_CONFIG.target,
-          position: "bottom-right",
-          placeholder: VDV_CONFIG.placeholder,
-          initialMessages: VDV_CONFIG.initialMessages,
-          header: { title: VDV_CONFIG.headerTitle },
-          openOnLoad: !!VDV_CONFIG.openOnLoad
-        });
-      }
-
-      // Try to inject brand styles a few times in case mount is async
-      let attempts = 0;
-      const t = setInterval(() => {
-        attempts++;
-        if (injectValDeVieStyles() || attempts > 20) clearInterval(t);
+          clearInterval(inject);
+        }
+        if (tries > 40) clearInterval(inject);
       }, 150);
-
-      return true;
     }
 
-    // --- Load the UMD file, then init; if that ever fails, you’ll see a clear console error
     (async () => {
       try {
+        // Use the build that registers the <n8n-chat> element
         await loadScript("https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.umd.js");
-        if (!initWidget()) {
-          console.error("n8n chat loaded, but no factory function found.");
-        }
+        mountN8NChat();
       } catch (err) {
         console.error(err.message);
       }
