@@ -1,66 +1,49 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Val de Vie Assistant (Demo)</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Val de Vie Assistant (Demo)</title>
 
-    <!-- n8n chat widget styles (required by the widget) -->
-    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+  <!-- Required n8n widget styles -->
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
 
-    <!-- Global defaults from your repo -->
-    <link rel="stylesheet" href="../../brand.css" />
+  <!-- Global + Client CSS -->
+  <link rel="stylesheet" href="../../brand.css" />
+  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=9" />
+</head>
 
-    <!-- Client-specific theme (make sure this comes AFTER brand.css) -->
-    <link rel="stylesheet" href="../../themes/val-de-vie.css?v=2025-08-22-6" />
+<body>
+  <!-- Mount point -->
+  <div id="chat-root"></div>
 
-    <!-- Simple page stub -->
-    <style>
-      html, body { height:100%; margin:0; }
-      .hero {
-        min-height:100%;
-        display:grid;
-        place-items:center;
-        font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-        color:#0b1220;
-      }
-      h1 { font-weight:600; margin-bottom:8px; }
-      p  { margin:0; opacity:.7; }
-    </style>
+  <script type="module">
+    import { createClientChat } from "../../widget-wrapper.js";
 
-    <!-- Define config BEFORE loading the wrapper -->
-    <script>
-      window.ClientChatConfig = {
-        webhookUrl: "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat",
-        brand: {
-          title: "How can we help?",
-          subtitle: "Ask about listings, viewings, or the estate",
-          inputPlaceholder: "Type your question…",
-          footer: ""
-        },
-        /* Optional: first assistant line (your wrapper can consume this) */
-        starterMessages: [
-          { role: "assistant", text: "Welcome to Val de Vie Properties! How can I assist you today?" }
-        ],
-        features: { streaming: false, memory: true, fileUploads: false },
-        headers: { "X-Client-Key": "val-de-vie" },
-        metadata: { client: "val-de-vie", env: "demo", streaming: false }
-      };
-    </script>
-  </head>
+    const ClientChatConfig = {
+      webhook: {
+        url: "https://n8n.recoverykings.co/webhook/xxxxxxx/chat", // replace with your webhook
+        route: "general",
+      },
+      branding: {
+        logoUrl: "https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg",
+        name: "Val de Vie Properties",
+        welcomeText: "Welcome to Val de Vie Properties! How can I help you today?",
+        inputPlaceholder: "Type your message here…",
+      },
+      ui: {
+        position: "bottom-right",
+        openOnLoad: true,    // start open so you can see styling instantly
+        showHeader: true,
+      },
+    };
 
-  <body>
-    <section class="hero">
-      <div>
-        <h1>Val de Vie Assistant (Demo)</h1>
-        <p>Open the chat bubble bottom-right.</p>
-      </div>
-    </section>
+    const api = await createClientChat({
+      target: "#chat-root",
+      config: ClientChatConfig,
+    });
 
-    <!-- Load wrapper & initialize -->
-    <script type="module">
-      import { createClientChat } from 'https://robofish89.github.io/ai-web-chatbot/widget-wrapper.js';
-      createClientChat(window.ClientChatConfig);
-    </script>
-  </body>
+    window.__vdvChat = api; // available in console
+  </script>
+</body>
 </html>
