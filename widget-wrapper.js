@@ -1,5 +1,5 @@
 // widget-wrapper.js
-// Programmatic initializer (ESM route) you can reuse on other pages/clients.
+// Reusable initializer (for future clients if you prefer ES module loading).
 
 export async function createClientChat({ target = "#chat-root", config }) {
   if (!window.__n8nChatLoaded) {
