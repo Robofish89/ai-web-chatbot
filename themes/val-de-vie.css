@@ -2,107 +2,72 @@
    Val de Vie Theme (v2)
    =========================== */
 
-/* Core brand tokens */
-:root {
-  --chat--color-primary: #000000;   /* black for header + user bubble */
-  --chat--color-secondary: #a3863b; /* gold accent */
-  --chat--border-radius: 18px;
-
-  --chat--window--width: 440px;
-  --chat--window--height: 640px;
-
-  --chat--message--font-size: 0.96rem;
-  --chat--title--font-size: 1.15rem;
-  --chat--text-color: #0b1220;
+:root{
+  --chat--color-primary:#000;      /* black */
+  --chat--color-secondary:#a3863b; /* gold */
+  --chat--border-radius:18px;
+  --chat--window--width:440px;
+  --chat--window--height:640px;
+  --chat--message--font-size:0.96rem;
+  --chat--title--font-size:1.15rem;
+  --chat--text-color:#0b1220;
 }
 
-/* Header bar */
-.n8n-chat-header {
-  background: var(--chat--color-primary) !important;
-  color: #fff !important;
-  border-top-left-radius: var(--chat--border-radius) !important;
-  border-top-right-radius: var(--chat--border-radius) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 8px !important;
+/* Header bar -> black + logo */
+.n8n-chat .n8n-chat-header{
+  background:var(--chat--color-primary) !important;
+  color:#fff !important;
+  border-top-left-radius:var(--chat--border-radius) !important;
+  border-top-right-radius:var(--chat--border-radius) !important;
+  display:flex !important; align-items:center !important; justify-content:center !important;
+  padding:8px !important;
+}
+.n8n-chat .n8n-chat-header h2,
+.n8n-chat .n8n-chat-header p{ display:none !important; }
+.n8n-chat .n8n-chat-header::before{
+  content:"" !important; display:block !important;
+  width:180px !important; height:44px !important;
+  background:url("https://valdevieproperties.co.za/wp-content/uploads/2023/08/VDV-Properties_Updated-Logo-03.png")
+            no-repeat center / contain !important;
 }
 
-/* Replace heading with logo */
-.n8n-chat-header h2,
-.n8n-chat-header p {
-  display: none !important; /* hide default heading/subtext */
+/* Launcher bubble: black + gold hover */
+.n8n-chat .n8n-chat-toggle{
+  right:28px !important; bottom:28px !important;
+  width:66px !important; height:66px !important;
+  background:var(--chat--color-primary) !important; color:#fff !important;
+  border-radius:9999px !important; box-shadow:0 10px 26px rgba(0,0,0,.18);
+  transition:background .25s ease;
 }
-.n8n-chat-header::before {
-  content: "" !important;
-  display: block !important;
-  width: 160px !important;
-  height: 40px !important;
-  background: url("https://valdevieproperties.co.za/wp-content/uploads/2023/08/VDV-Properties_Updated-Logo-03.png") no-repeat center;
-  background-size: contain !important;
+.n8n-chat .n8n-chat-toggle:hover{ background:var(--chat--color-secondary) !important; }
+
+/* Window offset */
+.n8n-chat .n8n-chat-window{ right:28px !important; bottom:100px !important; }
+
+/* Messages */
+.n8n-chat .n8n-chat-message--user{
+  background:var(--chat--color-primary) !important; color:#fff !important;
+  border-radius:var(--chat--border-radius) !important;
+  font-size:var(--chat--message--font-size) !important;
+}
+.n8n-chat .n8n-chat-message--bot{
+  background:#f6f7fb !important; color:var(--chat--text-color) !important;
+  border-radius:var(--chat--border-radius) !important;
+  font-size:var(--chat--message--font-size) !important;
 }
 
-/* Launcher bubble */
-.n8n-chat-toggle {
-  right: 28px !important;
-  bottom: 28px !important;
-  width: 66px !important;
-  height: 66px !important;
-  background: var(--chat--color-primary) !important;
-  color: #fff !important;
-  border-radius: 9999px !important;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, .18);
-  transition: background 0.25s ease;
+/* Input + send */
+.n8n-chat .n8n-chat-input{
+  background:#fff !important; border:1px solid #e5e7eb !important;
+  color:var(--chat--text-color) !important; border-radius:12px !important;
+  display:flex !important;
 }
-.n8n-chat-toggle:hover {
-  background: var(--chat--color-secondary) !important;
+.n8n-chat .n8n-chat-send,
+.n8n-chat .n8n-chat-input button[type="submit"]{
+  background:var(--chat--color-secondary) !important; color:#fff !important;
+  border-radius:50% !important; width:38px !important; height:38px !important;
+  display:inline-flex; align-items:center; justify-content:center;
 }
 
-/* Window offset (when open) */
-.n8n-chat-window {
-  right: 28px !important;
-  bottom: 100px !important;
-}
-
-/* Message bubbles */
-.n8n-chat-message--user {
-  background: var(--chat--color-primary) !important;
-  color: #fff !important;
-  border-radius: var(--chat--border-radius) !important;
-  font-size: var(--chat--message--font-size) !important;
-}
-.n8n-chat-message--bot {
-  background: #f6f7fb !important;
-  color: var(--chat--text-color) !important;
-  border-radius: var(--chat--border-radius) !important;
-  font-size: var(--chat--message--font-size) !important;
-}
-
-/* Input bar */
-.n8n-chat-input {
-  background: #fff !important;
-  border: 1px solid #e5e7eb !important;
-  color: var(--chat--text-color) !important;
-  border-radius: 12px !important;
-  display: flex !important;
-}
-
-/* Send button */
-.n8n-chat-send,
-.n8n-chat-input button[type="submit"] {
-  background: var(--chat--color-secondary) !important;
-  color: #fff !important;
-  border-radius: 50% !important;
-  width: 38px !important;
-  height: 38px !important;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Footer */
-.n8n-chat-footer {
-  font-size: 12px !important;
-  color: #9aa3b2 !important;
-  text-align: center !important;
-}
+/* Footer (optional) */
+.n8n-chat .n8n-chat-footer{ font-size:12px !important; color:#9aa3b2 !important; text-align:center !important; }
