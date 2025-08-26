@@ -1,82 +1,22 @@
 /* themes/val-de-vie.css */
-/* Val de Vie Theme — black & gold, plus input stability */
+/* Base variables; wrapper also writes these onto <n8n-chat> */
 
-:root {
-  --chat-primary: #000000;           /* black */
-  --chat-primary-contrast: #ffffff;
-  --chat-accent: #a3863b;            /* gold */
-  --chat-accent-contrast: #ffffff;
-  --chat-bg: #ffffff;
-  --chat-surface: #f8f8f8;
-  --chat-border: #e5e5e5;
-  --chat-text: #111111;
-  --chat-muted: #5f6368;
-}
-
-/* Map variables to n8n-chat */
-#chat-root n8n-chat {
-  --n8n-chat-primary: var(--chat-primary);
-  --n8n-chat-primary-contrast: var(--chat-primary-contrast);
-  --n8n-chat-accent: var(--chat-accent);
-  --n8n-chat-accent-contrast: var(--chat-accent-contrast);
-  --n8n-chat-bg: var(--chat-bg);
-  --n8n-chat-surface: var(--chat-surface);
-  --n8n-chat-border: var(--chat-border);
-  --n8n-chat-text: var(--chat-text);
-  --n8n-chat-muted: var(--chat-muted);
+:root{
+  --n8n-chat-primary: #000000;           /* black */
+  --n8n-chat-primary-contrast: #ffffff;
+  --n8n-chat-accent: #a3863b;            /* gold */
+  --n8n-chat-accent-contrast: #ffffff;
+  --n8n-chat-bg: #ffffff;
+  --n8n-chat-surface: #f8f8f8;
+  --n8n-chat-border: #e5e5e5;
+  --n8n-chat-text: #111111;
+  --n8n-chat-muted: #5f6368;
 }
 
-/* Keep widget fixed and above the page */
-#chat-root {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  z-index: 2147483600;
-}
-
-/* Header: black + crest instead of text */
-#chat-root n8n-chat .header,
-#chat-root n8n-chat [data-part="header"] {
-  background: #000 !important;
-  color: #fff !important;
-  border-bottom: 1px solid #000;
-}
-#chat-root n8n-chat .header-title,
-#chat-root n8n-chat [data-part="header-title"] {
-  font-size: 0 !important;
-  height: 28px;
-  background: url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
-    center/contain no-repeat;
-}
-
-/* User bubbles → black */
-#chat-root n8n-chat .message--user,
-#chat-root n8n-chat [data-role="message-user"] {
-  background: #000 !important;
-  color: #fff !important;
-}
-
-/* Send button → gold */
-#chat-root n8n-chat .send-button,
-#chat-root n8n-chat [data-part="send-button"] {
-  background: #a3863b !important;
-  color: #fff !important;
-}
-#chat-root n8n-chat .send-button:hover,
-#chat-root n8n-chat [data-part="send-button"]:hover {
-  filter: brightness(0.92);
-}
-
-/* Prevent input shrinking on long replies */
-#chat-root n8n-chat .composer,
-#chat-root n8n-chat [data-part="composer"] {
-  min-height: 56px !important;
-  display: flex;
-  align-items: center;
-}
-#chat-root n8n-chat .composer textarea,
-#chat-root n8n-chat [data-part="composer-textarea"] {
-  min-height: 40px !important;
-  flex: 1 1 auto;
-  resize: vertical;
+/* Keep widget fixed and clickable */
+#chat-root{
+  position:fixed;
+  right:16px;
+  bottom:16px;
+  z-index:2147483600;
 }
