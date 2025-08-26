@@ -1,73 +1,129 @@
-/* ===========================
-   Val de Vie Theme (v2)
-   =========================== */
+/* ---------------------------
+   Val de Vie Theme Overrides
+   --------------------------- */
 
-:root{
-  --chat--color-primary:#000;      /* black */
-  --chat--color-secondary:#a3863b; /* gold */
-  --chat--border-radius:18px;
-  --chat--window--width:440px;
-  --chat--window--height:640px;
-  --chat--message--font-size:0.96rem;
-  --chat--title--font-size:1.15rem;
-  --chat--text-color:#0b1220;
-}
+/* 1) CSS custom properties consumed by @n8n/chat (safe defaults) */
+:root {
+  /* Primary: black */
+  --chat-primary: #000000;
+  --chat-primary-contrast: #ffffff;
 
-/* Header bar -> black + logo */
-.n8n-chat .n8n-chat-header{
-  background:var(--chat--color-primary) !important;
-  color:#fff !important;
-  border-top-left-radius:var(--chat--border-radius) !important;
-  border-top-right-radius:var(--chat--border-radius) !important;
-  display:flex !important; align-items:center !important; justify-content:center !important;
-  padding:8px !important;
-}
-.n8n-chat .n8n-chat-header h2,
-.n8n-chat .n8n-chat-header p{ display:none !important; }
-.n8n-chat .n8n-chat-header::before{
-  content:"" !important; display:block !important;
-  width:180px !important; height:44px !important;
-  background:url("https://valdevieproperties.co.za/wp-content/uploads/2023/08/VDV-Properties_Updated-Logo-03.png")
-            no-repeat center / contain !important;
+  /* Secondary / accent: gold */
+  --chat-accent: #a3863b;
+  --chat-accent-contrast: #ffffff;
+
+  /* Bubbles & surface tones */
+  --chat-bg: #ffffff;
+  --chat-surface: #f8f8f8;
+  --chat-border: #e5e5e5;
+
+  /* Text */
+  --chat-text: #111111;
+  --chat-muted: #5f6368;
 }
 
-/* Launcher bubble: black + gold hover */
-.n8n-chat .n8n-chat-toggle{
-  right:28px !important; bottom:28px !important;
-  width:66px !important; height:66px !important;
-  background:var(--chat--color-primary) !important; color:#fff !important;
-  border-radius:9999px !important; box-shadow:0 10px 26px rgba(0,0,0,.18);
-  transition:background .25s ease;
-}
-.n8n-chat .n8n-chat-toggle:hover{ background:var(--chat--color-secondary) !important; }
-
-/* Window offset */
-.n8n-chat .n8n-chat-window{ right:28px !important; bottom:100px !important; }
-
-/* Messages */
-.n8n-chat .n8n-chat-message--user{
-  background:var(--chat--color-primary) !important; color:#fff !important;
-  border-radius:var(--chat--border-radius) !important;
-  font-size:var(--chat--message--font-size) !important;
-}
-.n8n-chat .n8n-chat-message--bot{
-  background:#f6f7fb !important; color:var(--chat--text-color) !important;
-  border-radius:var(--chat--border-radius) !important;
-  font-size:var(--chat--message--font-size) !important;
+/* 2) Make sure our variables map to n8n-chat if it supports CSS vars
+      (these names mirror common mappings used by web components) */
+n8n-chat,
+#chat-root n8n-chat {
+  --n8n-chat-primary: var(--chat-primary);
+  --n8n-chat-primary-contrast: var(--chat-primary-contrast);
+  --n8n-chat-accent: var(--chat-accent);
+  --n8n-chat-accent-contrast: var(--chat-accent-contrast);
+  --n8n-chat-bg: var(--chat-bg);
+  --n8n-chat-surface: var(--chat-surface);
+  --n8n-chat-border: var(--chat-border);
+  --n8n-chat-text: var(--chat-text);
+  --n8n-chat-muted: var(--chat-muted);
 }
 
-/* Input + send */
-.n8n-chat .n8n-chat-input{
-  background:#fff !important; border:1px solid #e5e7eb !important;
-  color:var(--chat--text-color) !important; border-radius:12px !important;
-  display:flex !important;
-}
-.n8n-chat .n8n-chat-send,
-.n8n-chat .n8n-chat-input button[type="submit"]{
-  background:var(--chat--color-secondary) !important; color:#fff !important;
-  border-radius:50% !important; width:38px !important; height:38px !important;
-  display:inline-flex; align-items:center; justify-content:center;
+/* 3) Launcher bubble styles (outside the widget, so we control it) */
+#vdev-launcher {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2147483000; /* above everything */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--chat-border);
+  background: var(--chat-surface);
+  color: var(--chat-text);
+  font: 500 14px/1.1 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
 }
 
-/* Footer (optional) */
-.n8n-chat .n8n-chat-footer{ font-size:12px !important; color:#9aa3b2 !important; text-align:center !important; }
+#vdev-launcher:hover { border-color: var(--chat-accent); }
+#vdev-launcher img { width: 20px; height: 20px; display: block; }
+
+/* 4) Force chat container on top and clickable */
+#chat-root {
+  position: fixed; /* ensures the widget container pins to viewport */
+  inset: auto 20px 80px auto; /* default bottom-right with gap for launcher */
+  z-index: 2147483600; /* above launcher */
+  pointer-events: none; /* let internal widget manage clicks */
+}
+#chat-root * { pointer-events: auto; } /* re-enable for inner elements */
+
+/* 5) Header branding: show crest instead of text heading
+   We keep the accessible text in the DOM but visually replace it */
+#chat-root n8n-chat .header-title,
+#chat-root n8n-chat [data-part="header-title"] {
+  font-size: 0; /* hide text but keep element for a11y */
+  height: 28px;
+  background: url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
+              center/contain no-repeat;
+}
+
+/* 6) Colors: user bubbles (black) and send button (gold) */
+#chat-root n8n-chat .message--user,
+#chat-root n8n-chat [data-role="message-user"] {
+  background: var(--chat-primary) !important;
+  color: var(--chat-primary-contrast) !important;
+}
+
+#chat-root n8n-chat .send-button,
+#chat-root n8n-chat [data-part="send-button"] {
+  background: var(--chat-accent) !important;
+  color: var(--chat-accent-contrast) !important;
+}
+#chat-root n8n-chat .send-button:hover,
+#chat-root n8n-chat [data-part="send-button"]:hover {
+  filter: brightness(0.92);
+}
+
+/* 7) Prevent shrinking of the input after long replies */
+#chat-root n8n-chat .composer,
+#chat-root n8n-chat [data-part="composer"] {
+  min-height: 56px !important;
+  display: flex;
+  align-items: center;
+}
+#chat-root n8n-chat .composer textarea,
+#chat-root n8n-chat [data-part="composer-textarea"] {
+  min-height: 40px !important;
+  resize: vertical;
+  flex: 1 1 auto;
+}
+
+/* 8) Subtle chrome */
+#chat-root n8n-chat .header,
+#chat-root n8n-chat [data-part="header"] {
+  background: #111111; /* black header */
+  color: #ffffff;
+  border-bottom: 1px solid #000;
+}
+#chat-root n8n-chat .chat-window,
+#chat-root n8n-chat [data-part="window"] {
+  background: var(--chat-bg);
+  border: 1px solid var(--chat-border);
+  box-shadow: 0 20px 60px rgba(0,0,0,.18);
+  border-radius: 12px;
+}
+
+/* 9) Links and hovers */
+#chat-root n8n-chat a { color: var(--chat-accent); }
+#chat-root n8n-chat a:hover { text-decoration: underline; }
