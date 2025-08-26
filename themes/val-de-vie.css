@@ -1,30 +1,19 @@
-/* ---------------------------
-   Val de Vie Theme Overrides
-   --------------------------- */
+/* themes/val-de-vie.css */
+/* Val de Vie Theme — colors & layout fixes */
 
-/* 1) CSS custom properties consumed by @n8n/chat (safe defaults) */
 :root {
-  /* Primary: black */
-  --chat-primary: #000000;
+  --chat-primary: #000000;           /* black */
   --chat-primary-contrast: #ffffff;
-
-  /* Secondary / accent: gold */
-  --chat-accent: #a3863b;
+  --chat-accent: #a3863b;            /* gold */
   --chat-accent-contrast: #ffffff;
-
-  /* Bubbles & surface tones */
   --chat-bg: #ffffff;
   --chat-surface: #f8f8f8;
   --chat-border: #e5e5e5;
-
-  /* Text */
   --chat-text: #111111;
   --chat-muted: #5f6368;
 }
 
-/* 2) Make sure our variables map to n8n-chat if it supports CSS vars
-      (these names mirror common mappings used by web components) */
-n8n-chat,
+/* Map variables to n8n-chat */
 #chat-root n8n-chat {
   --n8n-chat-primary: var(--chat-primary);
   --n8n-chat-primary-contrast: var(--chat-primary-contrast);
@@ -37,65 +26,50 @@ n8n-chat,
   --n8n-chat-muted: var(--chat-muted);
 }
 
-/* 3) Launcher bubble styles (outside the widget, so we control it) */
-#vdev-launcher {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 2147483000; /* above everything */
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--chat-border);
-  background: var(--chat-surface);
-  color: var(--chat-text);
-  font: 500 14px/1.1 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(0,0,0,.12);
-}
-
-#vdev-launcher:hover { border-color: var(--chat-accent); }
-#vdev-launcher img { width: 20px; height: 20px; display: block; }
-
-/* 4) Force chat container on top and clickable */
+/* Ensure widget is fixed and clickable */
 #chat-root {
-  position: fixed; /* ensures the widget container pins to viewport */
-  inset: auto 20px 80px auto; /* default bottom-right with gap for launcher */
-  z-index: 2147483600; /* above launcher */
-  pointer-events: none; /* let internal widget manage clicks */
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2147483600;
 }
-#chat-root * { pointer-events: auto; } /* re-enable for inner elements */
 
-/* 5) Header branding: show crest instead of text heading
-   We keep the accessible text in the DOM but visually replace it */
+/* Header: black */
+#chat-root n8n-chat .header,
+#chat-root n8n-chat [data-part="header"] {
+  background: #000 !important;
+  color: #fff !important;
+  border-bottom: 1px solid #000;
+}
+
+/* Swap title text with Val de Vie crest */
 #chat-root n8n-chat .header-title,
 #chat-root n8n-chat [data-part="header-title"] {
-  font-size: 0; /* hide text but keep element for a11y */
+  font-size: 0 !important;
   height: 28px;
   background: url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
-              center/contain no-repeat;
+    center/contain no-repeat;
 }
 
-/* 6) Colors: user bubbles (black) and send button (gold) */
+/* User bubbles → black */
 #chat-root n8n-chat .message--user,
 #chat-root n8n-chat [data-role="message-user"] {
-  background: var(--chat-primary) !important;
-  color: var(--chat-primary-contrast) !important;
+  background: #000 !important;
+  color: #fff !important;
 }
 
+/* Send button → gold */
 #chat-root n8n-chat .send-button,
 #chat-root n8n-chat [data-part="send-button"] {
-  background: var(--chat-accent) !important;
-  color: var(--chat-accent-contrast) !important;
+  background: #a3863b !important;
+  color: #fff !important;
 }
 #chat-root n8n-chat .send-button:hover,
 #chat-root n8n-chat [data-part="send-button"]:hover {
-  filter: brightness(0.92);
+  filter: brightness(0.9);
 }
 
-/* 7) Prevent shrinking of the input after long replies */
+/* Prevent input shrinking */
 #chat-root n8n-chat .composer,
 #chat-root n8n-chat [data-part="composer"] {
   min-height: 56px !important;
@@ -105,25 +79,6 @@ n8n-chat,
 #chat-root n8n-chat .composer textarea,
 #chat-root n8n-chat [data-part="composer-textarea"] {
   min-height: 40px !important;
-  resize: vertical;
   flex: 1 1 auto;
+  resize: vertical;
 }
-
-/* 8) Subtle chrome */
-#chat-root n8n-chat .header,
-#chat-root n8n-chat [data-part="header"] {
-  background: #111111; /* black header */
-  color: #ffffff;
-  border-bottom: 1px solid #000;
-}
-#chat-root n8n-chat .chat-window,
-#chat-root n8n-chat [data-part="window"] {
-  background: var(--chat-bg);
-  border: 1px solid var(--chat-border);
-  box-shadow: 0 20px 60px rgba(0,0,0,.18);
-  border-radius: 12px;
-}
-
-/* 9) Links and hovers */
-#chat-root n8n-chat a { color: var(--chat-accent); }
-#chat-root n8n-chat a:hover { text-decoration: underline; }
