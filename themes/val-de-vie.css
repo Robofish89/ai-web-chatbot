@@ -1,6 +1,6 @@
-/* themes/val-de-vie.css */
-/* Non-shadow UMD build → we can target the DOM directly. */
+/* Val de Vie theme – targets both UMD (light DOM) and common fallbacks */
 
+/* Gold & black palette */
 :root{
   --vdev-black: #000000;
   --vdev-gold:  #a3863b;
@@ -9,7 +9,7 @@
   --vdev-muted: #5f6368;
 }
 
-/* Keep widget fixed and above the page (if not using built-in FAB) */
+/* Keep container on top/right */
 #n8n-chat{
   position: fixed;
   right: 16px;
@@ -17,14 +17,19 @@
   z-index: 2147483600;
 }
 
-/* ===== Core chrome ===== */
-#n8n-chat .header{
+/* Header (try several selectors used by different builds) */
+#n8n-chat .header,
+#n8n-chat [data-part="header"],
+#n8n-chat [class*="header"]{
   background: var(--vdev-black) !important;
   color: var(--vdev-white) !important;
   border-bottom: 1px solid var(--vdev-black) !important;
 }
-#n8n-chat .header-title{
-  /* replace title text with crest */
+
+/* Replace title text with the Val de Vie crest */
+#n8n-chat .header-title,
+#n8n-chat [data-part="header-title"],
+#n8n-chat [class*="header-title"]{
   font-size: 0 !important;
   height: 28px !important;
   background: url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
@@ -32,7 +37,9 @@
 }
 
 /* Chat window surface */
-#n8n-chat .chat-window{
+#n8n-chat .chat-window,
+#n8n-chat [data-part="window"],
+#n8n-chat [class*="chat-window"]{
   background: #ffffff !important;
   border: 1px solid #e5e5e5 !important;
   border-radius: 12px !important;
@@ -40,33 +47,44 @@
 }
 
 /* User bubbles → black */
-#n8n-chat .message--user{
+#n8n-chat .message--user,
+#n8n-chat [data-role="message-user"],
+#n8n-chat [class*="message"][class*="user"]{
   background: var(--vdev-black) !important;
   color: var(--vdev-white) !important;
 }
 
-/* Send button → gold (no red hover) */
-#n8n-chat .send-button{
+/* Send button → gold; prevent red hover */
+#n8n-chat .send-button,
+#n8n-chat [data-part="send-button"],
+#n8n-chat button[type="submit"]{
   background: var(--vdev-gold) !important;
   color: var(--vdev-white) !important;
+  border: none !important;
 }
-#n8n-chat .send-button:hover{
+#n8n-chat .send-button:hover,
+#n8n-chat [data-part="send-button"]:hover,
+#n8n-chat button[type="submit"]:hover{
   filter: brightness(0.92) !important;
 }
 
 /* Composer stability */
-#n8n-chat .composer{
+#n8n-chat .composer,
+#n8n-chat [data-part="composer"],
+#n8n-chat [class*="composer"]{
   min-height: 56px !important;
   display: flex !important;
   align-items: center !important;
 }
-#n8n-chat .composer textarea{
+#n8n-chat .composer textarea,
+#n8n-chat [data-part="composer-textarea"],
+#n8n-chat textarea{
   min-height: 40px !important;
   resize: vertical !important;
   flex: 1 1 auto !important;
 }
 
-/* Launcher (FAB) → gold (override red) */
+/* Launcher (FAB) → gold (override default red) */
 #n8n-chat .launcher,
 #n8n-chat .fab,
 #n8n-chat [data-part="launcher"],
