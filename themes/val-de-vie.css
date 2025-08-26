@@ -1,4 +1,4 @@
-/* themes/val-de-vie.css — UMD build (no Shadow DOM), CSS applies directly */
+/* themes/val-de-vie.css — Val de Vie black+gold theme */
 
 /* Palette */
 :root{
@@ -8,7 +8,7 @@
   --vdev-border:#e5e5e5;
 }
 
-/* Keep container visible and on top */
+/* Container */
 #n8n-chat{
   position: fixed;
   right: 16px;
@@ -16,10 +16,9 @@
   z-index: 2147483600;
 }
 
-/* Header → black; text white */
+/* Header */
 #n8n-chat .header,
-#n8n-chat [data-part="header"],
-#n8n-chat [class*="header"]{
+#n8n-chat [data-part="header"]{
   background: var(--vdev-black) !important;
   color: var(--vdev-white) !important;
   border-bottom: 1px solid var(--vdev-black) !important;
@@ -27,33 +26,21 @@
 
 /* Replace title text with crest */
 #n8n-chat .header-title,
-#n8n-chat [data-part="header-title"],
-#n8n-chat [class*="header-title"]{
+#n8n-chat [data-part="header-title"]{
   font-size: 0 !important;
   height: 28px !important;
   background: url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
              center/contain no-repeat !important;
 }
 
-/* Window look */
-#n8n-chat .chat-window,
-#n8n-chat [data-part="window"],
-#n8n-chat [class*="chat-window"]{
-  background: #fff !important;
-  border: 1px solid var(--vdev-border) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 20px 60px rgba(0,0,0,.18) !important;
-}
-
 /* User bubbles → black */
 #n8n-chat .message--user,
-#n8n-chat [data-role="message-user"],
-#n8n-chat [class*="message"][class*="user"]{
+#n8n-chat [data-role="message-user"]{
   background: var(--vdev-black) !important;
   color: var(--vdev-white) !important;
 }
 
-/* Send button → gold; no red hover */
+/* Send button → gold */
 #n8n-chat .send-button,
 #n8n-chat [data-part="send-button"],
 #n8n-chat button[type="submit"]{
@@ -61,9 +48,7 @@
   color: var(--vdev-white) !important;
   border: none !important;
 }
-#n8n-chat .send-button:hover,
-#n8n-chat [data-part="send-button"]:hover,
-#n8n-chat button[type="submit"]:hover{
+#n8n-chat .send-button:hover{
   filter: brightness(0.92) !important;
 }
 
@@ -74,25 +59,30 @@
   display: flex !important;
   align-items: center !important;
 }
-#n8n-chat .composer textarea,
-#n8n-chat [data-part="composer-textarea"]{
+#n8n-chat .composer textarea{
   min-height: 40px !important;
   resize: vertical !important;
   flex: 1 1 auto !important;
 }
 
-/* Launcher (FAB) → gold */
+/* === Launcher (FAB / speech bubble) === */
 #n8n-chat .launcher,
 #n8n-chat .fab,
 #n8n-chat [data-part="launcher"],
 #n8n-chat button[aria-label*="Open"]{
-  background: var(--vdev-gold) !important;
+  background: var(--vdev-black) !important;
   color: var(--vdev-white) !important;
   border: none !important;
+  border-radius: 50% !important;  /* keep circle */
+  box-shadow: 0 4px 12px rgba(0,0,0,.25) !important;
+  transition: background 0.25s ease !important;
 }
+
+/* Hover → gold */
 #n8n-chat .launcher:hover,
 #n8n-chat .fab:hover,
 #n8n-chat [data-part="launcher"]:hover,
 #n8n-chat button[aria-label*="Open"]:hover{
-  filter: brightness(0.92) !important;
+  background: var(--vdev-gold) !important;
+  color: var(--vdev-white) !important;
 }
