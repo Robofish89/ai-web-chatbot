@@ -1,5 +1,5 @@
 /* themes/val-de-vie.css */
-/* Val de Vie Theme — colors & layout fixes */
+/* Val de Vie Theme — black & gold, plus input stability */
 
 :root {
   --chat-primary: #000000;           /* black */
@@ -26,7 +26,7 @@
   --n8n-chat-muted: var(--chat-muted);
 }
 
-/* Ensure widget is fixed and clickable */
+/* Keep widget fixed and above the page */
 #chat-root {
   position: fixed;
   right: 16px;
@@ -34,15 +34,13 @@
   z-index: 2147483600;
 }
 
-/* Header: black */
+/* Header: black + crest instead of text */
 #chat-root n8n-chat .header,
 #chat-root n8n-chat [data-part="header"] {
   background: #000 !important;
   color: #fff !important;
   border-bottom: 1px solid #000;
 }
-
-/* Swap title text with Val de Vie crest */
 #chat-root n8n-chat .header-title,
 #chat-root n8n-chat [data-part="header-title"] {
   font-size: 0 !important;
@@ -66,10 +64,10 @@
 }
 #chat-root n8n-chat .send-button:hover,
 #chat-root n8n-chat [data-part="send-button"]:hover {
-  filter: brightness(0.9);
+  filter: brightness(0.92);
 }
 
-/* Prevent input shrinking */
+/* Prevent input shrinking on long replies */
 #chat-root n8n-chat .composer,
 #chat-root n8n-chat [data-part="composer"] {
   min-height: 56px !important;
