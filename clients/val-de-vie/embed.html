@@ -5,18 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Val de Vie Assistant (Demo)</title>
 
-  <!-- n8n widget base CSS -->
+  <!-- n8n base CSS -->
   <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
 
-  <!-- Global + Client CSS -->
+  <!-- Only a tiny site CSS; all brand styling will be injected into Shadow DOM -->
   <link rel="stylesheet" href="../../brand.css" />
-  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=50" />
+  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=60" />
 </head>
 <body>
-  <!-- Mount target -->
+  <!-- Mount target the widget should use -->
   <div id="n8n-chat"></div>
 
-  <!-- Config -->
+  <!-- 1) Provide config up-front (covers builds that auto-init from this global) -->
   <script>
     window.ChatWidgetConfig = {
       target: "#n8n-chat",
@@ -34,74 +34,105 @@
     };
   </script>
 
-  <!-- Loader + Shadow DOM style injection -->
+  <!-- 2) Load the UMD bundle, then force-init if it didn't auto-init -->
   <script>
     (function () {
-      const load = (url) =>
-        new Promise((resolve, reject) => {
+      function loadScript(src) {
+        return new Promise((resolve, reject) => {
           const s = document.createElement("script");
-          s.src = url;
+          s.src = src;
           s.async = true;
           s.onload = resolve;
           s.onerror = reject;
           document.body.appendChild(s);
         });
+      }
 
-      const init = () => {
+      // Try to create the widget using any known global factory
+      function tryManualInit() {
         const cfg = window.ChatWidgetConfig || {};
-        const create =
-          (window.N8NChat && window.N8NChat.createChat) ||
-          window.createChat;
-        if (typeof create !== "function") return false;
-
-        create({
-          webhookUrl: cfg.webhook.url,
-          target: "#n8n-chat",
-          position: "bottom-right",
-          placeholder: cfg.placeholder,
-          initialMessages: cfg.initialMessages,
-          header: cfg.header,
-          openOnLoad: true,
-        });
-
-        // Inject Val de Vie styles into shadow root
-        setTimeout(() => {
-          const el = document.querySelector("n8n-chat");
-          if (el && el.shadowRoot) {
-            const style = document.createElement("style");
-            style.textContent = `
-              /* Header */
-              .header { background:#000 !important; color:#fff !important; }
-              .header-title {
-                font-size:0 !important; height:28px !important;
-                background:url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
-                  center/contain no-repeat !important;
-              }
-
-              /* User bubbles */
-              .message--user { background:#000 !important; color:#fff !important; }
-
-              /* Send button */
-              .send-button { background:#a3863b !important; color:#fff !important; border:none !important; }
-              .send-button:hover { filter:brightness(0.92) !important; }
-
-              /* Launcher (speech bubble) */
-              .launcher { background:#000 !important; color:#fff !important; }
-              .launcher:hover { background:#a3863b !important; color:#fff !important; }
-            `;
-            el.shadowRoot.appendChild(style);
+        const factories = [
+          () => window.N8NChat && window.N8NChat.createChat,
+          () => window.createChat,
+          () => window.Chat && (window.Chat.createChat || window.Chat.create),
+        ];
+        let create = null;
+        for (const f of factories) {
+          try { const fn = f(); if (typeof fn === "function") { create = fn; break; } } catch {}
+        }
+        if (typeof create === "function") {
+          // Avoid double-mount
+          const already = document.querySelector("#n8n-chat n8n-chat, body > n8n-chat");
+          if (!already) {
+            create({
+              webhookUrl: cfg.webhook && cfg.webhook.url,
+              target: cfg.target || "#n8n-chat",
+              position: cfg.position || "bottom-right",
+              placeholder: cfg.placeholder || "Type your message…",
+              initialMessages: cfg.initialMessages || [],
+              header: cfg.header || { title: "Val de Vie Properties" },
+              openOnLoad: !!cfg.openOnLoad
+            });
           }
-        }, 600);
+          return true;
+        }
+        return false;
+      }
 
+      // Inject Val de Vie styles directly into the widget's Shadow DOM
+      function injectShadowTheme() {
+        const el =
+          document.querySelector("#n8n-chat n8n-chat") ||
+          document.querySelector("body > n8n-chat");
+        if (!el || !el.shadowRoot) return false;
+
+        if (!el.shadowRoot.getElementById("vdv-shadow-theme")) {
+          const style = document.createElement("style");
+          style.id = "vdv-shadow-theme";
+          style.textContent = `
+            /* Header: black with crest title */
+            .header { background:#000 !important; color:#fff !important; }
+            .header-title {
+              font-size:0 !important; height:28px !important;
+              background:url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
+                       center/contain no-repeat !important;
+            }
+
+            /* User message bubble: black */
+            .message--user { background:#000 !important; color:#fff !important; }
+
+            /* Send button: gold (no red hover) */
+            .send-button { background:#a3863b !important; color:#fff !important; border:none !important; }
+            .send-button:hover { filter:brightness(0.92) !important; }
+
+            /* Launcher (speech bubble): keep shape, just recolor */
+            .launcher { background:#000 !important; color:#fff !important; }
+            .launcher:hover { background:#a3863b !important; color:#fff !important; }
+          `;
+          el.shadowRoot.appendChild(style);
+        }
         return true;
-      };
+      }
+
+      // Poll for the element & style it; if missing, try to init first.
+      function startThemingPoll() {
+        let tries = 0;
+        const timer = setInterval(() => {
+          tries++;
+          const ok = injectShadowTheme();
+          if (ok || tries > 40) clearInterval(timer);
+          // If the element still isn't there, attempt a manual init once
+          if (!ok && tries === 3) tryManualInit();
+        }, 150);
+      }
 
       (async () => {
         try {
-          await load("https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.umd.js");
-          init() || console.error("n8n chat init failed");
-        } catch {
-          console.error("Failed to load chat.umd.js");
+          await loadScript("https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.umd.js");
+          // Either auto-inited or not — in both cases, theme after a tick
+          requestAnimationFrame(startThemingPoll);
+        } catch (e) {
+          console.error("Failed to load n8n chat UMD:", e);
         }
       })();
     })();
