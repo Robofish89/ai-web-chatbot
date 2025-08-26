@@ -1,7 +1,7 @@
 /* themes/val-de-vie.css */
+/* Only place/stacking for the container; all brand styling goes into the widget's shadow DOM */
 
-/* Keep chat container in place */
-#n8n-chat {
+#n8n-chat{
   position: fixed;
   right: 16px;
   bottom: 16px;
