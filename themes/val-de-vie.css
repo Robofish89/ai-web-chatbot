@@ -1,15 +1,13 @@
-/* Val de Vie theme – targets both UMD (light DOM) and common fallbacks */
+/* themes/val-de-vie.css – UMD (no Shadow DOM) so CSS applies directly */
 
-/* Gold & black palette */
+/* Palette */
 :root{
   --vdev-black: #000000;
   --vdev-gold:  #a3863b;
   --vdev-white: #ffffff;
-  --vdev-text:  #111111;
-  --vdev-muted: #5f6368;
 }
 
-/* Keep container on top/right */
+/* Keep container visible and on top */
 #n8n-chat{
   position: fixed;
   right: 16px;
@@ -17,7 +15,7 @@
   z-index: 2147483600;
 }
 
-/* Header (try several selectors used by different builds) */
+/* Header → black; text white */
 #n8n-chat .header,
 #n8n-chat [data-part="header"],
 #n8n-chat [class*="header"]{
@@ -26,7 +24,7 @@
   border-bottom: 1px solid var(--vdev-black) !important;
 }
 
-/* Replace title text with the Val de Vie crest */
+/* Replace title text with crest */
 #n8n-chat .header-title,
 #n8n-chat [data-part="header-title"],
 #n8n-chat [class*="header-title"]{
@@ -34,16 +32,6 @@
   height: 28px !important;
   background: url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
              center/contain no-repeat !important;
-}
-
-/* Chat window surface */
-#n8n-chat .chat-window,
-#n8n-chat [data-part="window"],
-#n8n-chat [class*="chat-window"]{
-  background: #ffffff !important;
-  border: 1px solid #e5e5e5 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 20px 60px rgba(0,0,0,.18) !important;
 }
 
 /* User bubbles → black */
@@ -54,7 +42,7 @@
   color: var(--vdev-white) !important;
 }
 
-/* Send button → gold; prevent red hover */
+/* Send button → gold (no red hover) */
 #n8n-chat .send-button,
 #n8n-chat [data-part="send-button"],
 #n8n-chat button[type="submit"]{
@@ -70,21 +58,19 @@
 
 /* Composer stability */
 #n8n-chat .composer,
-#n8n-chat [data-part="composer"],
-#n8n-chat [class*="composer"]{
+#n8n-chat [data-part="composer"]{
   min-height: 56px !important;
   display: flex !important;
   align-items: center !important;
 }
 #n8n-chat .composer textarea,
-#n8n-chat [data-part="composer-textarea"],
-#n8n-chat textarea{
+#n8n-chat [data-part="composer-textarea"]{
   min-height: 40px !important;
   resize: vertical !important;
   flex: 1 1 auto !important;
 }
 
-/* Launcher (FAB) → gold (override default red) */
+/* Launcher (FAB) → gold */
 #n8n-chat .launcher,
 #n8n-chat .fab,
 #n8n-chat [data-part="launcher"],
