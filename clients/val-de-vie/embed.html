@@ -5,27 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Val de Vie Assistant (Demo)</title>
 
-    <!-- REQUIRED: n8n chat widget styles -->
+    <!-- n8n chat widget styles (required by the widget) -->
     <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
 
     <!-- Global defaults from your repo -->
     <link rel="stylesheet" href="../../brand.css" />
 
-    <!-- Client-specific theme -->
-    <link rel="stylesheet" href="/ai-web-chatbot/themes/val-de-vie.css?v=5" />
-    
+    <!-- Client-specific theme (make sure this comes AFTER brand.css) -->
+    <link rel="stylesheet" href="../../themes/val-de-vie.css?v=2025-08-22-6" />
+
+    <!-- Simple page stub -->
     <style>
-      /* Simple page stub */
-      html, body { height: 100%; margin: 0; }
+      html, body { height:100%; margin:0; }
       .hero {
-        min-height: 100%;
-        display: grid;
-        place-items: center;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-        color: #0b1220;
+        min-height:100%;
+        display:grid;
+        place-items:center;
+        font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+        color:#0b1220;
       }
-      h1 { font-weight: 600; margin-bottom: 8px; }
-      p  { margin: 0; opacity: .7; }
+      h1 { font-weight:600; margin-bottom:8px; }
+      p  { margin:0; opacity:.7; }
     </style>
 
     <!-- Define config BEFORE loading the wrapper -->
@@ -36,14 +36,15 @@
           title: "How can we help?",
           subtitle: "Ask about listings, viewings, or the estate",
           inputPlaceholder: "Type your question…",
+          footer: ""
         },
-        /* Custom first message (replaces “My name is Nathan…”) */
+        /* Optional: first assistant line (your wrapper can consume this) */
         starterMessages: [
           { role: "assistant", text: "Welcome to Val de Vie Properties! How can I assist you today?" }
         ],
         features: { streaming: false, memory: true, fileUploads: false },
-        headers: { "x-client-key": "val-de-vie" },
-        context: { client: "val-de-vie", env: "demo", streaming: false }
+        headers: { "X-Client-Key": "val-de-vie" },
+        metadata: { client: "val-de-vie", env: "demo", streaming: false }
       };
     </script>
   </head>
