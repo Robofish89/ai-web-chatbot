@@ -1,22 +1,83 @@
 /* themes/val-de-vie.css */
-/* Base variables; wrapper also writes these onto <n8n-chat> */
+/* Non-shadow UMD build → we can target the DOM directly. */
 
 :root{
-  --n8n-chat-primary: #000000;           /* black */
-  --n8n-chat-primary-contrast: #ffffff;
-  --n8n-chat-accent: #a3863b;            /* gold */
-  --n8n-chat-accent-contrast: #ffffff;
-  --n8n-chat-bg: #ffffff;
-  --n8n-chat-surface: #f8f8f8;
-  --n8n-chat-border: #e5e5e5;
-  --n8n-chat-text: #111111;
-  --n8n-chat-muted: #5f6368;
+  --vdev-black: #000000;
+  --vdev-gold:  #a3863b;
+  --vdev-white: #ffffff;
+  --vdev-text:  #111111;
+  --vdev-muted: #5f6368;
 }
 
-/* Keep widget fixed and clickable */
-#chat-root{
-  position:fixed;
-  right:16px;
-  bottom:16px;
-  z-index:2147483600;
+/* Keep widget fixed and above the page (if not using built-in FAB) */
+#n8n-chat{
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2147483600;
+}
+
+/* ===== Core chrome ===== */
+#n8n-chat .header{
+  background: var(--vdev-black) !important;
+  color: var(--vdev-white) !important;
+  border-bottom: 1px solid var(--vdev-black) !important;
+}
+#n8n-chat .header-title{
+  /* replace title text with crest */
+  font-size: 0 !important;
+  height: 28px !important;
+  background: url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
+             center/contain no-repeat !important;
+}
+
+/* Chat window surface */
+#n8n-chat .chat-window{
+  background: #ffffff !important;
+  border: 1px solid #e5e5e5 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,.18) !important;
+}
+
+/* User bubbles → black */
+#n8n-chat .message--user{
+  background: var(--vdev-black) !important;
+  color: var(--vdev-white) !important;
+}
+
+/* Send button → gold (no red hover) */
+#n8n-chat .send-button{
+  background: var(--vdev-gold) !important;
+  color: var(--vdev-white) !important;
+}
+#n8n-chat .send-button:hover{
+  filter: brightness(0.92) !important;
+}
+
+/* Composer stability */
+#n8n-chat .composer{
+  min-height: 56px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+#n8n-chat .composer textarea{
+  min-height: 40px !important;
+  resize: vertical !important;
+  flex: 1 1 auto !important;
+}
+
+/* Launcher (FAB) → gold (override red) */
+#n8n-chat .launcher,
+#n8n-chat .fab,
+#n8n-chat [data-part="launcher"],
+#n8n-chat button[aria-label*="Open"]{
+  background: var(--vdev-gold) !important;
+  color: var(--vdev-white) !important;
+  border: none !important;
+}
+#n8n-chat .launcher:hover,
+#n8n-chat .fab:hover,
+#n8n-chat [data-part="launcher"]:hover,
+#n8n-chat button[aria-label*="Open"]:hover{
+  filter: brightness(0.92) !important;
 }
