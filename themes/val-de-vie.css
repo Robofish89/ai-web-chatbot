@@ -1,10 +1,11 @@
-/* themes/val-de-vie.css – UMD (no Shadow DOM) so CSS applies directly */
+/* themes/val-de-vie.css — UMD build (no Shadow DOM), CSS applies directly */
 
 /* Palette */
 :root{
   --vdev-black: #000000;
   --vdev-gold:  #a3863b;
   --vdev-white: #ffffff;
+  --vdev-border:#e5e5e5;
 }
 
 /* Keep container visible and on top */
@@ -34,6 +35,16 @@
              center/contain no-repeat !important;
 }
 
+/* Window look */
+#n8n-chat .chat-window,
+#n8n-chat [data-part="window"],
+#n8n-chat [class*="chat-window"]{
+  background: #fff !important;
+  border: 1px solid var(--vdev-border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,.18) !important;
+}
+
 /* User bubbles → black */
 #n8n-chat .message--user,
 #n8n-chat [data-role="message-user"],
@@ -42,7 +53,7 @@
   color: var(--vdev-white) !important;
 }
 
-/* Send button → gold (no red hover) */
+/* Send button → gold; no red hover */
 #n8n-chat .send-button,
 #n8n-chat [data-part="send-button"],
 #n8n-chat button[type="submit"]{
