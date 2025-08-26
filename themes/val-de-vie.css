@@ -1,5 +1,5 @@
 /* themes/val-de-vie.css */
-/* Only container placement; all brand styling is injected into the widget's shadow DOM */
+/* Only places the container; all brand styles are injected into the widget's shadow DOM */
 
 #n8n-chat{
   position: fixed;
