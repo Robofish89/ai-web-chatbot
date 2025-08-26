@@ -10,13 +10,13 @@
 
   <!-- Global + Client CSS -->
   <link rel="stylesheet" href="../../brand.css" />
-  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=40" />
+  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=50" />
 </head>
 <body>
   <!-- Mount target -->
   <div id="n8n-chat"></div>
 
-  <!-- Config FIRST -->
+  <!-- Config -->
   <script>
     window.ChatWidgetConfig = {
       target: "#n8n-chat",
@@ -34,100 +34,75 @@
     };
   </script>
 
-  <!-- Robust loader: try UMDs -> force init; else ESM fallback -->
+  <!-- Loader + Shadow DOM style injection -->
   <script>
     (function () {
-      const UMD_URLS = [
-        // Friendly filenames (adblockers usually allow these)
-        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.umd.js",
-        "https://unpkg.com/@n8n/chat/dist/chat.umd.js",
-        // Often-blocked filenames (we try anyway)
-        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.global.js",
-        "https://unpkg.com/@n8n/chat/dist/index.global.js",
-        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.umd.js",
-        "https://unpkg.com/@n8n/chat/dist/index.umd.js"
-      ];
+      const load = (url) =>
+        new Promise((resolve, reject) => {
+          const s = document.createElement("script");
+          s.src = url;
+          s.async = true;
+          s.onload = resolve;
+          s.onerror = reject;
+          document.body.appendChild(s);
+        });
 
-      const tryGetFactory = () => {
-        // Cover known globals across builds
-        const candidates = [
-          () => window.N8NChat && window.N8NChat.createChat,
-          () => window.N8N && window.N8N.Chat && window.N8N.Chat.createChat,
-          () => window.createChat,                    // some UMDs export this
-          () => window.Chat && window.Chat.create,    // rare alt
-          () => window.Chat && window.Chat.createChat
-        ];
-        for (const f of candidates) {
-          try { const fn = f(); if (typeof fn === "function") return fn; } catch {}
-        }
-        return null;
-      };
-
-      const forceInit = () => {
-        const create = tryGetFactory();
+      const init = () => {
         const cfg = window.ChatWidgetConfig || {};
-        if (!create) return false;
+        const create =
+          (window.N8NChat && window.N8NChat.createChat) ||
+          window.createChat;
+        if (typeof create !== "function") return false;
 
-        // Avoid double mount
-        const already = document.querySelector("#n8n-chat n8n-chat");
-        if (!already) {
-          create({
-            webhookUrl: cfg.webhook && cfg.webhook.url,
-            target: cfg.target || "#n8n-chat",
-            position: cfg.position || "bottom-right",
-            placeholder: cfg.placeholder || "Type your message…",
-            initialMessages: cfg.initialMessages || [],
-            header: cfg.header || { title: "Val de Vie Properties" },
-            openOnLoad: !!cfg.openOnLoad
-          });
-        }
+        create({
+          webhookUrl: cfg.webhook.url,
+          target: "#n8n-chat",
+          position: "bottom-right",
+          placeholder: cfg.placeholder,
+          initialMessages: cfg.initialMessages,
+          header: cfg.header,
+          openOnLoad: true,
+        });
+
+        // Inject Val de Vie styles into shadow root
+        setTimeout(() => {
+          const el = document.querySelector("n8n-chat");
+          if (el && el.shadowRoot) {
+            const style = document.createElement("style");
+            style.textContent = `
+              /* Header */
+              .header { background:#000 !important; color:#fff !important; }
+              .header-title {
+                font-size:0 !important; height:28px !important;
+                background:url("https://www.valdevie.co.za/wp-content/uploads/2023/05/vdv-crest-gold.svg")
+                  center/contain no-repeat !important;
+              }
+
+              /* User bubbles */
+              .message--user { background:#000 !important; color:#fff !important; }
+
+              /* Send button */
+              .send-button { background:#a3863b !important; color:#fff !important; border:none !important; }
+              .send-button:hover { filter:brightness(0.92) !important; }
+
+              /* Launcher (speech bubble) */
+              .launcher { background:#000 !important; color:#fff !important; }
+              .launcher:hover { background:#a3863b !important; color:#fff !important; }
+            `;
+            el.shadowRoot.appendChild(style);
+          }
+        }, 600);
+
         return true;
       };
 
-      const loadScript = (src) => new Promise((resolve, reject) => {
-        const s = document.createElement("script");
-        s.src = src;
-        s.async = true;
-        s.onload = resolve;
-        s.onerror = reject;
-        document.body.appendChild(s);
-      });
-
       (async () => {
-        // 1) Try UMDs one by one; after each load, try to init
-        for (const url of UMD_URLS) {
-          try {
-            await loadScript(url);
-            // give the script a microtask to attach globals
-            await Promise.resolve();
-            if (forceInit()) return;
-          } catch (e) {
-            // continue to next url
-          }
+        try {
+          await load("https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.umd.js");
+          init() || console.error("n8n chat init failed");
+        } catch {
+          console.error("Failed to load chat.umd.js");
         }
-
-        // 2) ESM fallback: import and init programmatically
-        const m = document.createElement("script");
-        m.type = "module";
-        m.textContent = `
-          import * as mod from "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js";
-          const create = mod.createChat || (window.N8NChat && window.N8NChat.createChat);
-          const cfg = window.ChatWidgetConfig || {};
-          if (typeof create === "function") {
-            create({
-              webhookUrl: cfg.webhook?.url,
-              target: cfg.target || "#n8n-chat",
-              position: cfg.position || "bottom-right",
-              placeholder: cfg.placeholder || "Type your message…",
-              initialMessages: cfg.initialMessages || [],
-              header: cfg.header || { title: "Val de Vie Properties" },
-              openOnLoad: !!cfg.openOnLoad
-            });
-          } else {
-            console.error("Failed to initialize n8n chat: no factory function found.");
-          }
-        `;
-        document.body.appendChild(m);
       })();
     })();
   </script>
