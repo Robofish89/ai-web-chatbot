@@ -8,9 +8,9 @@
   <!-- Required n8n widget styles -->
   <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
 
-  <!-- Global + Client CSS -->
+  <!-- Global + Client CSS (relative paths for GitHub Pages) -->
   <link rel="stylesheet" href="../../brand.css" />
-  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=9" />
+  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=10" />
 </head>
 
 <body>
@@ -22,7 +22,7 @@
 
     const ClientChatConfig = {
       webhook: {
-        url: "https://n8n.recoverykings.co/webhook/xxxxxxx/chat", // replace with your webhook
+        url: "https://n8n.recoverykings.co/webhook/xxxxxxx/chat",  // <-- put your real webhook
         route: "general",
       },
       branding: {
@@ -33,17 +33,13 @@
       },
       ui: {
         position: "bottom-right",
-        openOnLoad: true,    // start open so you can see styling instantly
+        openOnLoad: true,    // open immediately so you can verify styling
         showHeader: true,
       },
     };
 
-    const api = await createClientChat({
-      target: "#chat-root",
-      config: ClientChatConfig,
-    });
-
-    window.__vdvChat = api; // available in console
+    const api = await createClientChat({ target: "#chat-root", config: ClientChatConfig });
+    window.__vdvChat = api; // for quick console testing
   </script>
 </body>
 </html>
