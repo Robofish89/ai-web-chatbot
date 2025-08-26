@@ -1,12 +1,13 @@
 // widget-wrapper.js
-// Loads @n8n/chat ESM bundle and mounts it with per-client config.
-// No window.ChatWidgetConfig and no UMD auto-init anywhere.
+// Loads @n8n/chat (ESM bundle) and mounts it with per-client config.
+// IMPORTANT: Do NOT use window.ChatWidgetConfig anywhere and do NOT include
+// the UMD auto-init <script src="...index.umd.js"> on the page.
 
 export async function createClientChat({ target = "#chat-root", config }) {
-  // Load ES bundle once
+  // Load the ES module bundle exactly once
   if (!window.__n8nChatLoaded) {
     const mod = await import("https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js");
-    // export name can be createChat; keep a safe fallback
+    // Prefer a named export; fall back to global if the bundle attaches one
     window.__n8nCreateChat = mod?.createChat || (window.N8NChat && window.N8NChat.createChat);
     window.__n8nChatLoaded = true;
   }
@@ -27,16 +28,15 @@ export async function createClientChat({ target = "#chat-root", config }) {
     openOnLoad: !!config?.ui?.openOnLoad,
   });
 
-  // ★ Immediately theme the host element so styles penetrate Shadow DOM
-  // (most robust way with this widget).
+  // THEME: set CSS vars directly on the <n8n-chat> host so they cross Shadow DOM
   const host = document.querySelector(`${target} n8n-chat`);
-  if (host && host.style && config?.theme) {
+  if (host && config?.theme) {
     Object.entries(config.theme).forEach(([name, value]) => {
       host.style.setProperty(name, value);
     });
   }
 
-  // Also inject a couple of guaranteed overrides for header/logo
+  // “Hard” overrides that are tricky via variables (logo swap, header bg, composer min-height)
   const styleId = "vdev-hard-overrides";
   if (!document.getElementById(styleId)) {
     const s = document.createElement("style");
@@ -66,6 +66,7 @@ export async function createClientChat({ target = "#chat-root", config }) {
     document.head.appendChild(s);
   }
 
+  // public API
   return {
     open: () => widget.open(),
     close: () => widget.close(),
