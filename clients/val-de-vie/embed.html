@@ -8,15 +8,15 @@
   <!-- Widget base CSS -->
   <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
 
-  <!-- Global + Client CSS (RELATIVE paths work on GitHub Pages) -->
+  <!-- Global + Client CSS (relative paths for GitHub Pages) -->
   <link rel="stylesheet" href="../../brand.css" />
-  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=30" />
+  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=31" />
 </head>
 <body>
-  <!-- Mount target -->
+  <!-- Mount target (UMD will attach here) -->
   <div id="n8n-chat"></div>
 
-  <!-- 1) Provide config up-front (UMD auto-init may use it) -->
+  <!-- 1) Provide config before the loader -->
   <script>
     window.ChatWidgetConfig = {
       target: "#n8n-chat",
@@ -24,69 +24,90 @@
         url: "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat",
         route: "general"
       },
+      // Greet immediately
       initialMessages: [
         { role: "assistant", text: "Welcome to Val de Vie Properties! How can I help you today?" }
       ],
-      placeholder: "Type your message here…",
+      placeholder: "Type your message…",
       position: "bottom-right",
       header: { title: "Val de Vie Properties" },
       openOnLoad: true
     };
   </script>
 
-  <!-- 2) Robust loader: try several UMD filenames; if all fail, fall back to ESM and init manually -->
+  <!-- 2) Robust loader: try multiple filenames + globals; fallback to ESM if needed -->
   <script>
     (function loadN8N() {
       const urls = [
-        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.umd.js",
-        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.umd.cjs",
-        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.global.js",
+        // jsDelivr
         "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.umd.js",
+        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.umd.js",
+        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.global.js",
+        // unpkg fallbacks
+        "https://unpkg.com/@n8n/chat/dist/chat.umd.js",
         "https://unpkg.com/@n8n/chat/dist/index.umd.js",
-        "https://unpkg.com/@n8n/chat/dist/index.umd.cjs",
-        "https://unpkg.com/@n8n/chat/dist/index.global.js",
-        "https://unpkg.com/@n8n/chat/dist/chat.umd.js"
+        "https://unpkg.com/@n8n/chat/dist/index.global.js"
       ];
 
-      function tryUrl(i) {
-        if (i >= urls.length) return loadESMFallback();
+      const tryInit = () => {
+        const cfg = window.ChatWidgetConfig || {};
+        // Detect the constructor exposed by different builds
+        const factories = [
+          () => window.N8NChat && window.N8NChat.createChat,
+          () => window.createChat,                 // some builds
+          () => window.Chat && window.Chat.create, // rare global name
+        ];
+        let create = null;
+        for (const f of factories) {
+          try { create = f(); if (typeof create === "function") break; } catch {}
+        }
+        if (typeof create === "function") {
+          // If auto-init didn’t happen, do it now
+          const alreadyMounted = document.querySelector("#n8n-chat n8n-chat");
+          if (!alreadyMounted) {
+            create({
+              webhookUrl: cfg.webhook && cfg.webhook.url,
+              target: cfg.target || "#n8n-chat",
+              position: cfg.position || "bottom-right",
+              placeholder: cfg.placeholder || "Type your message…",
+              initialMessages: cfg.initialMessages || [],
+              header: cfg.header || { title: "Val de Vie Properties" },
+              openOnLoad: !!cfg.openOnLoad
+            });
+          }
+          return true;
+        }
+        return false;
+      };
 
-        const s = document.createElement("script");
-        s.src = urls[i];
-        s.async = true;
+      const loadScript = (src) =>
+        new Promise((resolve, reject) => {
+          const s = document.createElement("script");
+          s.src = src;
+          s.async = true;
+          s.onload = resolve;
+          s.onerror = reject;
+          document.body.appendChild(s);
+        });
 
-        s.onload = () => {
-          // Some UMD builds auto-init using window.ChatWidgetConfig.
-          // If not auto-inited, create explicitly once.
-          setTimeout(() => {
-            if (!document.querySelector("#n8n-chat n8n-chat") && window.N8NChat?.createChat) {
-              const cfg = window.ChatWidgetConfig || {};
-              window.N8NChat.createChat({
-                webhookUrl: cfg.webhook?.url,
-                target: cfg.target || "#n8n-chat",
-                position: cfg.position || "bottom-right",
-                placeholder: cfg.placeholder || "Type your message…",
-                initialMessages: cfg.initialMessages || [],
-                header: cfg.header || { title: "Val de Vie Properties" },
-                openOnLoad: !!cfg.openOnLoad
-              });
-            }
-          }, 0);
-        };
+      (async () => {
+        for (const u of urls) {
+          try {
+            await loadScript(u);
+            // give the script a tick to attach globals
+            await new Promise(r => setTimeout(r, 0));
+            if (tryInit()) return;
+          } catch (_) { /* try next */ }
+        }
 
-        s.onerror = () => tryUrl(i + 1);
-        document.body.appendChild(s);
-      }
-
-      function loadESMFallback() {
-        // As a last resort, load the ESM bundle and initialize manually
+        // ESM fallback (some adblockers only block “index.*.js” names)
         const m = document.createElement("script");
         m.type = "module";
         m.textContent = `
           import * as mod from "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js";
           const create = mod.createChat || (window.N8NChat && window.N8NChat.createChat);
           const cfg = window.ChatWidgetConfig || {};
-          if (create) {
+          if (typeof create === "function") {
             create({
               webhookUrl: cfg.webhook?.url,
               target: cfg.target || "#n8n-chat",
@@ -99,9 +120,7 @@
           }
         `;
         document.body.appendChild(m);
-      }
-
-      tryUrl(0);
+      })();
     })();
   </script>
 </body>
