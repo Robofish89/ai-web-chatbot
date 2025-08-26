@@ -5,30 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Val de Vie Assistant (Demo)</title>
 
-  <!-- n8n widget CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat@latest/dist/style.css" rel="stylesheet" />
+  <!-- Widget base CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
 
-  <!-- Global + Client CSS (relative paths for GitHub Pages) -->
+  <!-- Global + Client CSS (RELATIVE paths work on GitHub Pages) -->
   <link rel="stylesheet" href="../../brand.css" />
-  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=20" />
+  <link rel="stylesheet" href="../../themes/val-de-vie.css?v=30" />
 </head>
 <body>
-  <!-- UMD target; the widget will mount inside here -->
+  <!-- Mount target -->
   <div id="n8n-chat"></div>
 
+  <!-- 1) Provide config up-front (UMD auto-init may use it) -->
   <script>
-    // Configure BEFORE loading the UMD script
     window.ChatWidgetConfig = {
       target: "#n8n-chat",
       webhook: {
         url: "https://n8n.recoverykings.co/webhook/edb8bf04-91b6-420c-b119-a9d24cd8d4d3/chat",
         route: "general"
       },
-      // Greeting (some versions accept either of these):
       initialMessages: [
         { role: "assistant", text: "Welcome to Val de Vie Properties! How can I help you today?" }
       ],
-      initialMessage: "Welcome to Val de Vie Properties! How can I help you today?",
       placeholder: "Type your message here…",
       position: "bottom-right",
       header: { title: "Val de Vie Properties" },
@@ -36,9 +34,75 @@
     };
   </script>
 
-  <!-- UMD loader with fallback (guarantees file is found) -->
-  <script src="https://cdn.jsdelivr.net/npm/@n8n/chat@latest/dist/index.umd.js"
-          onerror="var s=document.createElement('script');s.src='https://unpkg.com/@n8n/chat@latest/dist/index.umd.js';document.body.appendChild(s);">
+  <!-- 2) Robust loader: try several UMD filenames; if all fail, fall back to ESM and init manually -->
+  <script>
+    (function loadN8N() {
+      const urls = [
+        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.umd.js",
+        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.umd.cjs",
+        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.global.js",
+        "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.umd.js",
+        "https://unpkg.com/@n8n/chat/dist/index.umd.js",
+        "https://unpkg.com/@n8n/chat/dist/index.umd.cjs",
+        "https://unpkg.com/@n8n/chat/dist/index.global.js",
+        "https://unpkg.com/@n8n/chat/dist/chat.umd.js"
+      ];
+
+      function tryUrl(i) {
+        if (i >= urls.length) return loadESMFallback();
+
+        const s = document.createElement("script");
+        s.src = urls[i];
+        s.async = true;
+
+        s.onload = () => {
+          // Some UMD builds auto-init using window.ChatWidgetConfig.
+          // If not auto-inited, create explicitly once.
+          setTimeout(() => {
+            if (!document.querySelector("#n8n-chat n8n-chat") && window.N8NChat?.createChat) {
+              const cfg = window.ChatWidgetConfig || {};
+              window.N8NChat.createChat({
+                webhookUrl: cfg.webhook?.url,
+                target: cfg.target || "#n8n-chat",
+                position: cfg.position || "bottom-right",
+                placeholder: cfg.placeholder || "Type your message…",
+                initialMessages: cfg.initialMessages || [],
+                header: cfg.header || { title: "Val de Vie Properties" },
+                openOnLoad: !!cfg.openOnLoad
+              });
+            }
+          }, 0);
+        };
+
+        s.onerror = () => tryUrl(i + 1);
+        document.body.appendChild(s);
+      }
+
+      function loadESMFallback() {
+        // As a last resort, load the ESM bundle and initialize manually
+        const m = document.createElement("script");
+        m.type = "module";
+        m.textContent = `
+          import * as mod from "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js";
+          const create = mod.createChat || (window.N8NChat && window.N8NChat.createChat);
+          const cfg = window.ChatWidgetConfig || {};
+          if (create) {
+            create({
+              webhookUrl: cfg.webhook?.url,
+              target: cfg.target || "#n8n-chat",
+              position: cfg.position || "bottom-right",
+              placeholder: cfg.placeholder || "Type your message…",
+              initialMessages: cfg.initialMessages || [],
+              header: cfg.header || { title: "Val de Vie Properties" },
+              openOnLoad: !!cfg.openOnLoad
+            });
+          }
+        `;
+        document.body.appendChild(m);
+      }
+
+      tryUrl(0);
+    })();
   </script>
 </body>
 </html>
