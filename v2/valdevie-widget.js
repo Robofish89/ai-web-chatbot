@@ -1,6 +1,6 @@
 // v2/valdevie-widget.js
 (function () {
-  const WEBHOOK_URL = "https://n8n.recoverykings.co/webhook/87852d90-ca02-41d7-ad01-75561ed3560d";
+  const WEBHOOK_URL = "https://n8n.recoverykings.co/webhook/87852d90-ca02-41d7-ad01-75561ed3560d"; // <-- your production webhook URL
 
   // ---- Helpers ---------------------------------------------------------
   const createSessionId = () => {
@@ -9,6 +9,8 @@
   };
 
   const sessionId = createSessionId();
+  let userName = "";
+  let userEmail = "";
 
   const injectStyles = () => {
     if (document.getElementById("vdv-chat-styles")) return;
@@ -127,6 +129,81 @@
         cursor: pointer;
         font-size: 18px;
         line-height: 1;
+      }
+
+      /* Pre-chat overlay */
+      .vdv-prechat-overlay {
+        padding: 16px;
+        background: var(--vdv-bg);
+      }
+
+      .vdv-prechat-card {
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid var(--vdv-border);
+        padding: 14px 14px 16px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      }
+
+      .vdv-prechat-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #222;
+      }
+
+      .vdv-prechat-sub {
+        font-size: 12px;
+        color: #555;
+        margin-bottom: 10px;
+      }
+
+      .vdv-prechat-form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .vdv-prechat-field label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #666;
+        margin-bottom: 2px;
+        display: block;
+      }
+
+      .vdv-prechat-input {
+        width: 100%;
+        border-radius: 999px;
+        border: 1px solid #d2c7b4;
+        padding: 7px 10px;
+        font-size: 13px;
+        outline: none;
+        background: #fff;
+      }
+
+      .vdv-prechat-input:focus {
+        border-color: var(--vdv-gold);
+      }
+
+      .vdv-prechat-submit {
+        margin-top: 6px;
+        border-radius: 999px;
+        border: none;
+        background: var(--vdv-gold);
+        color: #111;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 7px 14px;
+        cursor: pointer;
+        align-self: flex-end;
+      }
+
+      .vdv-chat-body {
+        display: flex;
+        flex-direction: column;
+        min-height: 260px;
       }
 
       .vdv-chat-messages {
@@ -268,17 +345,46 @@
         </div>
         <button class="vdv-chat-close" aria-label="Close chat">×</button>
       </div>
-      <div class="vdv-chat-messages"></div>
-      <div class="vdv-chat-quick-actions"></div>
-      <div class="vdv-chat-status"></div>
-      <form class="vdv-chat-input-area">
-        <input class="vdv-chat-input" type="text" placeholder="Ask about Val de Vie properties…" autocomplete="off" />
-        <button class="vdv-chat-send" type="submit">Send</button>
-      </form>
+
+      <div class="vdv-prechat-overlay">
+        <div class="vdv-prechat-card">
+          <div class="vdv-prechat-title">Let’s get acquainted</div>
+          <div class="vdv-prechat-sub">
+            Share your details so a Val de Vie consultant can follow up with you after this chat.
+          </div>
+          <form class="vdv-prechat-form">
+            <div class="vdv-prechat-field">
+              <label for="vdv-prechat-name">Full name</label>
+              <input id="vdv-prechat-name" class="vdv-prechat-input vdv-prechat-name" type="text" required />
+            </div>
+            <div class="vdv-prechat-field">
+              <label for="vdv-prechat-email">Email address</label>
+              <input id="vdv-prechat-email" class="vdv-prechat-input vdv-prechat-email" type="email" required />
+            </div>
+            <button type="submit" class="vdv-prechat-submit">Start chat</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="vdv-chat-body vdv-hidden">
+        <div class="vdv-chat-messages"></div>
+        <div class="vdv-chat-quick-actions"></div>
+        <div class="vdv-chat-status"></div>
+        <form class="vdv-chat-input-area">
+          <input class="vdv-chat-input" type="text" placeholder="Ask about Val de Vie properties…" autocomplete="off" />
+          <button class="vdv-chat-send" type="submit">Send</button>
+        </form>
+      </div>
     `;
 
     document.body.appendChild(launcher);
     document.body.appendChild(win);
+
+    const prechatOverlay = win.querySelector(".vdv-prechat-overlay");
+    const prechatForm = win.querySelector(".vdv-prechat-form");
+    const prechatNameInput = win.querySelector(".vdv-prechat-name");
+    const prechatEmailInput = win.querySelector(".vdv-prechat-email");
+    const chatBodyEl = win.querySelector(".vdv-chat-body");
 
     const messagesEl = win.querySelector(".vdv-chat-messages");
     const quickActionsEl = win.querySelector(".vdv-chat-quick-actions");
@@ -336,7 +442,9 @@
           body: JSON.stringify({
             message: text,
             sessionId,
-            clientId: "val-de-vie"
+            clientId: "val-de-vie",
+            name: userName || null,
+            email: userEmail || null
           })
         });
 
@@ -363,26 +471,49 @@
       sendToBackend(text);
     };
 
-    // Initial welcome
     const initConversation = () => {
       messagesEl.innerHTML = "";
-      addMessage("Welcome to Val de Vie Properties. How can I assist you today? You can ask about properties for sale, rentals, the estate lifestyle, or specific neighbourhoods.", "bot");
+      addMessage(
+        "Welcome to Val de Vie Properties. How can I assist you today? You can ask about properties for sale, rentals, the estate lifestyle, or specific neighbourhoods.",
+        "bot"
+      );
       renderInitialQuickActions();
     };
 
-    // Events
+    // ----- Events -------------------------------------------------------
+
+    // Launcher -> show window + pre-chat form
     launcher.addEventListener("click", () => {
       launcher.classList.add("vdv-hidden");
       win.classList.remove("vdv-hidden");
-      initConversation();
-      inputEl.focus();
+      prechatOverlay.classList.remove("vdv-hidden");
+      chatBodyEl.classList.add("vdv-hidden");
+      prechatNameInput.focus();
     });
 
+    // Close button
     closeBtn.addEventListener("click", () => {
       win.classList.add("vdv-hidden");
       launcher.classList.remove("vdv-hidden");
     });
 
+    // Pre-chat form submit
+    prechatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const nameVal = prechatNameInput.value.trim();
+      const emailVal = prechatEmailInput.value.trim();
+      if (!nameVal || !emailVal) return;
+
+      userName = nameVal;
+      userEmail = emailVal;
+
+      prechatOverlay.classList.add("vdv-hidden");
+      chatBodyEl.classList.remove("vdv-hidden");
+      initConversation();
+      inputEl.focus();
+    });
+
+    // Chat form submit
     formEl.addEventListener("submit", (e) => {
       e.preventDefault();
       handleUserMessage(inputEl.value, false);
