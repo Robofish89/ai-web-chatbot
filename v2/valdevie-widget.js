@@ -453,11 +453,45 @@
     const renderInitialQuickActions = () => {
       clearQuickActions();
       const actions = [
-        { label: "I’m a buyer", payload: "I am a buyer interested in properties at Val de Vie." },
-        { label: "I’m a seller", payload: "I am a seller and want to discuss selling my property at Val de Vie." },
-        { label: "Tell me about Val de Vie Estate", payload: "Tell me about Val de Vie Estate and the lifestyle." },
-        { label: "Show current properties for sale", payload: "What properties are currently for sale at Val de Vie?" }
+        {
+          label: "ABOUT US",
+          payload:
+            "Tell me about Val de Vie and its story, vision, and lifestyle."
+        },
+        {
+          label: "HOMES",
+          payload: "Show me homes currently for sale at Val de Vie."
+        },
+        {
+          label: "APARTMENTS",
+          payload: "Show me apartments currently for sale at Val de Vie."
+        },
+        {
+          label: "RETIREMENT",
+          payload: "Tell me about retirement living options at Val de Vie."
+        },
+        {
+          label: "STANDS",
+          payload: "Show me available stands or plots at Val de Vie."
+        },
+        {
+          label: "COMMERCIAL",
+          payload: "Tell me about commercial property opportunities at Val de Vie."
+        },
+        {
+          label: "SALES MAP",
+          payload: "Show me the sales map for Val de Vie."
+        },
+        {
+          label: "MAURITIUS",
+          payload: "Tell me more about Val de Vie Mauritius."
+        },
+        {
+          label: "DEVELOPMENTS",
+          payload: "Show me current and upcoming developments at Val de Vie."
+        }
       ];
+
       actions.forEach((a) => {
         const btn = document.createElement("button");
         btn.type = "button";
@@ -513,7 +547,7 @@
     const initConversation = () => {
       messagesEl.innerHTML = "";
       addMessage(
-        "Welcome to Val de Vie Properties. How can I assist you today? You can ask about properties for sale, rentals, the estate lifestyle, or specific neighbourhoods.",
+        "Welcome to Val de Vie Properties. What can I help you with today? You can choose a section below or ask your own question about the estate, lifestyle, or properties.",
         "bot"
       );
       renderInitialQuickActions();
