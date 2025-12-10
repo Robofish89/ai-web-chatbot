@@ -1,9 +1,14 @@
 // v2/valdevie-widget.js
 (function () {
   const WEBHOOK_URL =
-    "https://n8n.recoverykings.co/webhook/87852d90-ca02-41d7-ad01-75561ed3560d"; // <-- your production webhook URL
+    "https://n8n.recoverykings.co/webhook/87852d90-ca02-41d7-ad01-75561ed3560d";
 
-  // ---- Helpers ---------------------------------------------------------
+  const VDV_LOGO_URL =
+    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/Instagram.jpeg";
+
+  const VDV_LAUNCHER_VIDEO_URL =
+    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/Untitled.mp4";
+
   const createSessionId = () => {
     if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
     return "vdv-" + Math.random().toString(36).substring(2) + Date.now();
@@ -19,7 +24,7 @@
     style.id = "vdv-chat-styles";
     style.textContent = `
       :root {
-        --vdv-gold: #b49a5a;
+        --vdv-gold: #d8b26b;
         --vdv-charcoal: #1f2022;
         --vdv-bg: #f5f3ed;
         --vdv-border: #ded6c4;
@@ -33,6 +38,7 @@
         right: 24px;
         z-index: 9999;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        cursor: pointer;
       }
 
       .vdv-launcher-main {
@@ -40,60 +46,26 @@
         height: 64px;
         border-radius: 50%;
         background: var(--vdv-charcoal);
-        color: #fff;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        border: 1px solid rgba(255,255,255,0.2);
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-        border: 1px solid rgba(255,255,255,0.2);
-        cursor: pointer;
-        position: relative;
         overflow: hidden;
-        animation: vdv-launcher-pulse 2.8s ease-in-out infinite;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
       }
 
-      .vdv-launcher-house {
-        font-size: 26px;
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.45));
+      .vdv-launcher-main:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px rgba(0,0,0,0.32);
       }
 
-      .vdv-launcher-bubble {
-        position: absolute;
-        right: 72px;
-        bottom: 18px;
-        background: #fff;
-        color: #222;
-        border-radius: 999px;
-        border: 1px solid var(--vdv-gold);
-        padding: 6px 12px;
-        font-size: 11px;
-        font-weight: 500;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.18);
-        white-space: nowrap;
-        animation: vdv-bubble-float 3s ease-in-out infinite;
-      }
-
-      .vdv-launcher-bubble::after {
-        content: "";
-        position: absolute;
-        right: -6px;
-        bottom: 8px;
-        width: 10px;
-        height: 10px;
-        background: #fff;
-        border-right: 1px solid var(--vdv-gold);
-        border-bottom: 1px solid var(--vdv-gold);
-        transform: rotate(45deg);
-      }
-
-      @keyframes vdv-launcher-pulse {
-        0%, 100% { transform: scale(1); box-shadow: 0 10px 25px rgba(0,0,0,0.25); }
-        50% { transform: scale(1.05); box-shadow: 0 14px 30px rgba(0,0,0,0.3); }
-      }
-
-      @keyframes vdv-bubble-float {
-        0%, 100% { transform: translateY(0); opacity: 1; }
-        50% { transform: translateY(-3px); opacity: 0.9; }
+      .vdv-launcher-video {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
       }
 
       /* ---------- Chat Window ---------- */
@@ -122,7 +94,7 @@
       .vdv-chat-header {
         background: linear-gradient(135deg, #111111, #2b2b2b);
         color: #fff;
-        padding: 14px 16px;
+        padding: 12px 14px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -133,41 +105,45 @@
         display: flex;
         align-items: center;
         gap: 10px;
+        min-width: 0;
       }
 
+      /* Circle favicon-style "V" */
       .vdv-chat-logo {
-        width: 40px;
-        height: 40px;
-        border-radius: 999px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
         border: 1px solid var(--vdv-gold);
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
-        background: #000;
-      }
-
-      .vdv-chat-logo img {
-        width: 110%;
-        height: auto;
-        display: block;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--vdv-gold);
+        background: rgba(0,0,0,0.6);
+        flex-shrink: 0;
       }
 
       .vdv-chat-title {
         display: flex;
         flex-direction: column;
+        gap: 2px;
+        overflow: hidden;
       }
 
-      .vdv-chat-title-main {
-        font-size: 13px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--vdv-gold);
+      .vdv-chat-title-logo {
+        height: 18px;
+        max-width: 180px;
+        object-fit: contain;
+        display: block;
       }
 
       .vdv-chat-title-sub {
         font-size: 11px;
         opacity: 0.9;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
 
       .vdv-chat-close {
@@ -177,9 +153,11 @@
         cursor: pointer;
         font-size: 18px;
         line-height: 1;
+        padding: 0;
       }
 
-      /* Pre-chat overlay */
+      /* ---------- Pre-chat overlay ---------- */
+
       .vdv-prechat-overlay {
         padding: 16px;
         background: var(--vdv-bg);
@@ -248,6 +226,8 @@
         cursor: pointer;
         align-self: flex-end;
       }
+
+      /* ---------- Chat body ---------- */
 
       .vdv-chat-body {
         display: flex;
@@ -368,7 +348,6 @@
     document.head.appendChild(style);
   };
 
-  // ---- UI creation -----------------------------------------------------
   const createUI = () => {
     injectStyles();
 
@@ -377,8 +356,15 @@
     launcher.className = "vdv-chat-launcher";
     launcher.innerHTML = `
       <div class="vdv-launcher-main">
-        <span class="vdv-launcher-house">🏡</span>
-        <div class="vdv-launcher-bubble">Need help?</div>
+        <video
+          class="vdv-launcher-video"
+          autoplay
+          muted
+          loop
+          playsinline
+        >
+          <source src="${VDV_LAUNCHER_VIDEO_URL}" type="video/mp4" />
+        </video>
       </div>
     `;
 
@@ -388,14 +374,9 @@
     win.innerHTML = `
       <div class="vdv-chat-header">
         <div class="vdv-chat-header-left">
-          <div class="vdv-chat-logo">
-            <img
-              src="https://valdevieproperties.co.za/wp-content/uploads/2023/08/VDV-Properties_Updated-Logo-03.png"
-              alt="Val de Vie Properties"
-            />
-          </div>
+          <div class="vdv-chat-logo">V</div>
           <div class="vdv-chat-title">
-            <div class="vdv-chat-title-main">VAL DE VIE</div>
+            <img src="${VDV_LOGO_URL}" alt="Val de Vie Properties" class="vdv-chat-title-logo" />
             <div class="vdv-chat-title-sub">AI Property Concierge</div>
           </div>
         </div>
@@ -483,7 +464,7 @@
         btn.className = "vdv-quick-btn";
         btn.textContent = a.label;
         btn.addEventListener("click", () => {
-          handleUserMessage(a.payload, /*fromQuick*/ true);
+          handleUserMessage(a.payload, true);
         });
         quickActionsEl.appendChild(btn);
       });
@@ -504,9 +485,7 @@
           })
         });
 
-        if (!res.ok) {
-          throw new Error("Network error");
-        }
+        if (!res.ok) throw new Error("Network error");
 
         const data = await res.json();
         const reply =
@@ -540,14 +519,8 @@
       renderInitialQuickActions();
     };
 
-    // ----- Events -------------------------------------------------------
-
-    // Launcher -> show window + pre-chat form
+    // Launcher click
     launcher.addEventListener("click", () => {
-      const main = launcher.querySelector(".vdv-launcher-main");
-      if (main) main.classList.add("vdv-hidden");
-
-      launcher.classList.remove("vdv-hidden");
       win.classList.remove("vdv-hidden");
       prechatOverlay.classList.remove("vdv-hidden");
       chatBodyEl.classList.add("vdv-hidden");
@@ -557,8 +530,6 @@
     // Close button
     closeBtn.addEventListener("click", () => {
       win.classList.add("vdv-hidden");
-      const main = launcher.querySelector(".vdv-launcher-main");
-      if (main) main.classList.remove("vdv-hidden");
     });
 
     // Pre-chat form submit
