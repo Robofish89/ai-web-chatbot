@@ -6,8 +6,9 @@
   const VDV_LOGO_URL =
     "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/Instagram.jpeg";
 
+  // Updated to use the new home.mp4 asset
   const VDV_LAUNCHER_VIDEO_URL =
-    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/Untitled.mp4";
+    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/home.mp4";
 
   const createSessionId = () => {
     if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -92,7 +93,7 @@
       }
 
       .vdv-chat-header {
-        background: linear-gradient(135deg, #111111, #2b2b2b);
+        background: #000000; /* solid black header */
         color: #fff;
         padding: 12px 14px;
         display: flex;
@@ -131,19 +132,12 @@
         overflow: hidden;
       }
 
+      /* Bigger logo in the header */
       .vdv-chat-title-logo {
-        height: 18px;
-        max-width: 180px;
+        height: 26px;
+        max-width: 200px;
         object-fit: contain;
         display: block;
-      }
-
-      .vdv-chat-title-sub {
-        font-size: 11px;
-        opacity: 0.9;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
       }
 
       .vdv-chat-close {
@@ -377,7 +371,6 @@
           <div class="vdv-chat-logo">V</div>
           <div class="vdv-chat-title">
             <img src="${VDV_LOGO_URL}" alt="Val de Vie Properties" class="vdv-chat-title-logo" />
-            <div class="vdv-chat-title-sub">AI Property Concierge</div>
           </div>
         </div>
         <button class="vdv-chat-close" aria-label="Close chat">×</button>
