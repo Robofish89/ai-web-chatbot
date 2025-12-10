@@ -1,6 +1,7 @@
 // v2/valdevie-widget.js
 (function () {
-  const WEBHOOK_URL = "https://n8n.recoverykings.co/webhook/87852d90-ca02-41d7-ad01-75561ed3560d"; // <-- your production webhook URL
+  const WEBHOOK_URL =
+    "https://n8n.recoverykings.co/webhook/87852d90-ca02-41d7-ad01-75561ed3560d"; // <-- your production webhook URL
 
   // ---- Helpers ---------------------------------------------------------
   const createSessionId = () => {
@@ -24,10 +25,17 @@
         --vdv-border: #ded6c4;
       }
 
+      /* ---------- Launcher ---------- */
+
       .vdv-chat-launcher {
         position: fixed;
         bottom: 24px;
         right: 24px;
+        z-index: 9999;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .vdv-launcher-main {
         width: 64px;
         height: 64px;
         border-radius: 50%;
@@ -37,22 +45,58 @@
         align-items: center;
         justify-content: center;
         box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-        cursor: pointer;
-        z-index: 9999;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         border: 1px solid rgba(255,255,255,0.2);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        animation: vdv-launcher-pulse 2.8s ease-in-out infinite;
       }
 
-      .vdv-chat-launcher-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        border: 2px solid var(--vdv-gold);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
+      .vdv-launcher-house {
+        font-size: 26px;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.45));
       }
+
+      .vdv-launcher-bubble {
+        position: absolute;
+        right: 72px;
+        bottom: 18px;
+        background: #fff;
+        color: #222;
+        border-radius: 999px;
+        border: 1px solid var(--vdv-gold);
+        padding: 6px 12px;
+        font-size: 11px;
+        font-weight: 500;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+        white-space: nowrap;
+        animation: vdv-bubble-float 3s ease-in-out infinite;
+      }
+
+      .vdv-launcher-bubble::after {
+        content: "";
+        position: absolute;
+        right: -6px;
+        bottom: 8px;
+        width: 10px;
+        height: 10px;
+        background: #fff;
+        border-right: 1px solid var(--vdv-gold);
+        border-bottom: 1px solid var(--vdv-gold);
+        transform: rotate(45deg);
+      }
+
+      @keyframes vdv-launcher-pulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 10px 25px rgba(0,0,0,0.25); }
+        50% { transform: scale(1.05); box-shadow: 0 14px 30px rgba(0,0,0,0.3); }
+      }
+
+      @keyframes vdv-bubble-float {
+        0%, 100% { transform: translateY(0); opacity: 1; }
+        50% { transform: translateY(-3px); opacity: 0.9; }
+      }
+
+      /* ---------- Chat Window ---------- */
 
       .vdv-chat-window {
         position: fixed;
@@ -92,17 +136,21 @@
       }
 
       .vdv-chat-logo {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
         border: 1px solid var(--vdv-gold);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--vdv-gold);
-        background: rgba(0,0,0,0.6);
+        overflow: hidden;
+        background: #000;
+      }
+
+      .vdv-chat-logo img {
+        width: 110%;
+        height: auto;
+        display: block;
       }
 
       .vdv-chat-title {
@@ -181,6 +229,7 @@
         font-size: 13px;
         outline: none;
         background: #fff;
+        box-sizing: border-box;
       }
 
       .vdv-prechat-input:focus {
@@ -283,6 +332,7 @@
         font-size: 13px;
         outline: none;
         background: #fff;
+        box-sizing: border-box;
       }
 
       .vdv-chat-input:focus {
@@ -326,8 +376,9 @@
     const launcher = document.createElement("div");
     launcher.className = "vdv-chat-launcher";
     launcher.innerHTML = `
-      <div class="vdv-chat-launcher-icon">
-        💬
+      <div class="vdv-launcher-main">
+        <span class="vdv-launcher-house">🏡</span>
+        <div class="vdv-launcher-bubble">Need help?</div>
       </div>
     `;
 
@@ -337,7 +388,12 @@
     win.innerHTML = `
       <div class="vdv-chat-header">
         <div class="vdv-chat-header-left">
-          <div class="vdv-chat-logo">V</div>
+          <div class="vdv-chat-logo">
+            <img
+              src="https://valdevieproperties.co.za/wp-content/uploads/2023/08/VDV-Properties_Updated-Logo-03.png"
+              alt="Val de Vie Properties"
+            />
+          </div>
           <div class="vdv-chat-title">
             <div class="vdv-chat-title-main">VAL DE VIE</div>
             <div class="vdv-chat-title-sub">AI Property Concierge</div>
@@ -350,7 +406,7 @@
         <div class="vdv-prechat-card">
           <div class="vdv-prechat-title">Let’s get acquainted</div>
           <div class="vdv-prechat-sub">
-            Share your details so a Val de Vie consultant can follow up with you after this chat.
+            Please share your details with us to start the chat.
           </div>
           <form class="vdv-prechat-form">
             <div class="vdv-prechat-field">
@@ -453,12 +509,16 @@
         }
 
         const data = await res.json();
-        const reply = data.reply || "I’m here, but I couldn’t understand the response format.";
+        const reply =
+          data.reply || "I’m here, but I couldn’t understand the response format.";
         addMessage(reply, "bot");
         setStatus("");
       } catch (err) {
         console.error("VDV chat error:", err);
-        addMessage("I’m having trouble reaching the Val de Vie AI assistant right now. Please try again in a moment or contact the sales office directly.", "bot");
+        addMessage(
+          "I’m having trouble reaching the Val de Vie AI assistant right now. Please try again in a moment or contact the sales office directly.",
+          "bot"
+        );
         setStatus("Connection issue");
       }
     };
@@ -484,7 +544,10 @@
 
     // Launcher -> show window + pre-chat form
     launcher.addEventListener("click", () => {
-      launcher.classList.add("vdv-hidden");
+      const main = launcher.querySelector(".vdv-launcher-main");
+      if (main) main.classList.add("vdv-hidden");
+
+      launcher.classList.remove("vdv-hidden");
       win.classList.remove("vdv-hidden");
       prechatOverlay.classList.remove("vdv-hidden");
       chatBodyEl.classList.add("vdv-hidden");
@@ -494,7 +557,8 @@
     // Close button
     closeBtn.addEventListener("click", () => {
       win.classList.add("vdv-hidden");
-      launcher.classList.remove("vdv-hidden");
+      const main = launcher.querySelector(".vdv-launcher-main");
+      if (main) main.classList.remove("vdv-hidden");
     });
 
     // Pre-chat form submit
