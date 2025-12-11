@@ -3,12 +3,13 @@
   const WEBHOOK_URL =
     "https://n8n.recoverykings.co/webhook/87852d90-ca02-41d7-ad01-75561ed3560d";
 
+  // New round logo (736x736)
   const VDV_LOGO_URL =
-    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/Instagram.jpeg";
+    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/roundlogo.png";
 
-  // Launcher video
+  // New launcher / home button video
   const VDV_LAUNCHER_VIDEO_URL =
-    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/home.mp4";
+    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/Home2.mp4";
 
   const createSessionId = () => {
     if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -92,12 +93,12 @@
         display: none !important;
       }
 
-      /* ---------- Header ---------- */
+      /* Header */
 
       .vdv-chat-header {
         background: #000000;
         color: #fff;
-        padding: 10px 16px;
+        padding: 12px 16px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -110,17 +111,16 @@
         min-width: 0;
       }
 
-      /* Title wrapper */
       .vdv-chat-title {
         display: flex;
         align-items: center;
         overflow: hidden;
       }
 
-      /* Val de Vie logo ONLY (no round V) */
+      /* Round Val de Vie logo in header */
       .vdv-chat-title-logo {
-        height: 44px;          /* big and clear, but keeps header reasonable */
-        max-width: 320px;
+        height: 44px;
+        width: auto;
         object-fit: contain;
         display: block;
       }
