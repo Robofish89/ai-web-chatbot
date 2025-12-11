@@ -6,7 +6,7 @@
   const VDV_LOGO_URL =
     "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/Instagram.jpeg";
 
-  // New launcher video
+  // Launcher video
   const VDV_LAUNCHER_VIDEO_URL =
     "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/home.mp4";
 
@@ -92,12 +92,12 @@
         display: none !important;
       }
 
-      /* Header */
+      /* ---------- Header ---------- */
 
       .vdv-chat-header {
         background: #000000;
         color: #fff;
-        padding: 12px 16px;
+        padding: 10px 16px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -107,40 +107,24 @@
       .vdv-chat-header-left {
         display: flex;
         align-items: center;
-        gap: 12px;
         min-width: 0;
       }
 
-      /* Circle favicon-style "V" */
-      .vdv-chat-logo {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        border: 2px solid var(--vdv-gold);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        font-weight: 600;
-        color: var(--vdv-gold);
-        background: rgba(0,0,0,0.6);
-        flex-shrink: 0;
-      }
-
+      /* Title wrapper */
       .vdv-chat-title {
         display: flex;
         align-items: center;
         overflow: hidden;
       }
 
-      /* Bigger, fully visible Val de Vie logo */
+      /* Val de Vie logo ONLY (no round V) */
       .vdv-chat-title-logo {
-      height: 80px;
-      max-width: 500px;
-      object-fit: contain;
-      margin-left: 10px;
-     }
-     
+        height: 44px;          /* big and clear, but keeps header reasonable */
+        max-width: 320px;
+        object-fit: contain;
+        display: block;
+      }
+
       .vdv-chat-close {
         border: none;
         background: transparent;
@@ -369,7 +353,6 @@
     win.innerHTML = `
       <div class="vdv-chat-header">
         <div class="vdv-chat-header-left">
-          <div class="vdv-chat-logo">V</div>
           <div class="vdv-chat-title">
             <img src="${VDV_LOGO_URL}" alt="Val de Vie Properties" class="vdv-chat-title-logo" />
           </div>
