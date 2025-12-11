@@ -5,7 +5,7 @@
 
   // New round logo (736x736)
   const VDV_LOGO_URL =
-    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/roundlogo.png";
+    "https://github.com/Robofish89/ai-web-chatbot/blob/main/assets/val-de-vie/whiteroundlogo.png";
 
   // New launcher / home button video
   const VDV_LAUNCHER_VIDEO_URL =
@@ -119,10 +119,10 @@
 
       /* Round Val de Vie logo in header */
       .vdv-chat-title-logo {
-        height: 44px;
-        width: auto;
-        object-fit: contain;
-        display: block;
+      height: 60px;     /* was 44px → now larger */
+      width: auto;
+      object-fit: contain;
+      display: block;
       }
 
       .vdv-chat-close {
