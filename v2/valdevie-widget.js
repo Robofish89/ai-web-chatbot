@@ -3,12 +3,11 @@
   const WEBHOOK_URL =
     "https://n8n.recoverykings.co/webhook/87852d90-ca02-41d7-ad01-75561ed3560d";
 
-  // New round logo (736x736)
+  // Round logo (736x736)
   const VDV_LOGO_URL =
-    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/roundlogo.png
-";
+    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/roundlogo.png";
 
-  // New launcher / home button video
+  // Launcher / home button video
   const VDV_LAUNCHER_VIDEO_URL =
     "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/Home2.mp4";
 
@@ -120,10 +119,10 @@
 
       /* Round Val de Vie logo in header */
       .vdv-chat-title-logo {
-      height: 60px;     /* was 44px → now larger */
-      width: auto;
-      object-fit: contain;
-      display: block;
+        height: 60px;
+        width: auto;
+        object-fit: contain;
+        display: block;
       }
 
       .vdv-chat-close {
