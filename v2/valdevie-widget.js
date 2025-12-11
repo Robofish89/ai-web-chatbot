@@ -5,7 +5,8 @@
 
   // New round logo (736x736)
   const VDV_LOGO_URL =
-    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/whiteroundlogo.png";
+    "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/roundlogo.png
+";
 
   // New launcher / home button video
   const VDV_LAUNCHER_VIDEO_URL =
