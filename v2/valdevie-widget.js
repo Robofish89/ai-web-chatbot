@@ -3,7 +3,7 @@
   const WEBHOOK_URL =
     "https://n8n.recoverykings.co/webhook/87852d90-ca02-41d7-ad01-75561ed3560d";
 
-  // Rectangle logo with glow
+  // Rectangle logo
   const VDV_LOGO_URL =
     "https://cdn.jsdelivr.net/gh/Robofish89/ai-web-chatbot@main/assets/val-de-vie/rectanglelogo.png";
 
@@ -33,7 +33,6 @@
       }
 
       /* ---------- Launcher ---------- */
-
       .vdv-chat-launcher {
         position: fixed;
         bottom: 24px;
@@ -67,7 +66,6 @@
       }
 
       /* ---------- Chat Window ---------- */
-
       .vdv-chat-window {
         position: fixed;
         bottom: 100px;
@@ -89,54 +87,28 @@
         display: none !important;
       }
 
-      /* ---------- Header with centered logo & gold glow ---------- */
-
+      /* ---------- Header (NO GLOW) ---------- */
       .vdv-chat-header {
         position: relative;
         background: #000;
         padding: 14px 16px;
-        height: 70px;
+        height: 90px;
         display: flex;
         align-items: center;
-        justify-content: flex-end; /* close button stays on right */
+        justify-content: flex-end;
         border-bottom: 1px solid rgba(255,255,255,0.15);
       }
 
-      /* Glow behind logo */
-      .vdv-chat-header::before {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 180px;
-        height: 180px;
-        transform: translate(-50%, -50%);
-        background: radial-gradient(
-          circle,
-          rgba(216,178,107,0.45) 0%,
-          rgba(216,178,107,0.12) 40%,
-          transparent 80%
-        );
-        filter: blur(22px);
-        z-index: 1;
-        pointer-events: none;
-      }
-
-      /* Centered container so logo stays perfectly in middle */
       .vdv-chat-header-center {
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        z-index: 2; /* above glow */
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        z-index: 2;
       }
 
-      /* Rectangle logo */
       .vdv-chat-title-logo {
-        height: 42px;    /* adjust if you want it larger */
+        height: 84px;      /* doubled from 42px */
         width: auto;
         display: block;
         object-fit: contain;
@@ -144,7 +116,7 @@
 
       .vdv-chat-close {
         position: relative;
-        z-index: 3; /* above glow */
+        z-index: 3;
         background: transparent;
         border: none;
         color: rgba(255,255,255,0.9);
@@ -153,7 +125,6 @@
       }
 
       /* ---------- Pre-chat ---------- */
-
       .vdv-prechat-overlay {
         padding: 16px;
         background: var(--vdv-bg);
@@ -207,7 +178,6 @@
       }
 
       /* ---------- Chat Body ---------- */
-
       .vdv-chat-body {
         display: flex;
         flex-direction: column;
@@ -229,7 +199,7 @@
         border: 1px solid var(--vdv-border);
         padding: 9px 11px;
         border-radius: 14px;
-max-width: 80%;
+        max-width: 80%;
       }
 
       .vdv-from-user .vdv-bubble {
@@ -262,7 +232,6 @@ max-width: 80%;
         font-weight: 600;
         cursor: pointer;
       }
-
     `;
     document.head.appendChild(style);
   };
@@ -344,7 +313,7 @@ max-width: 80%;
       scrollToBottom();
     };
 
-    /* ---------- Chat Logic ---------- */
+    /* ---------- Chat Backend ---------- */
     const sendToBackend = async (text) => {
       addMessage(text, "user");
       try {
@@ -367,7 +336,7 @@ max-width: 80%;
       }
     };
 
-    /* ---------- UI Actions ---------- */
+    /* ---------- UI Logic ---------- */
     launcher.addEventListener("click", () => {
       win.classList.remove("vdv-hidden");
       prechatOverlay.classList.remove("vdv-hidden");
