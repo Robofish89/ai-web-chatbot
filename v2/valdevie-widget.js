@@ -135,8 +135,8 @@
 
       /* Bigger, fully visible Val de Vie logo */
       .vdv-chat-title-logo {
-      height: 50px;
-      max-width: 330px;
+      height: 80px;
+      max-width: 500px;
       object-fit: contain;
       margin-left: 10px;
      }
